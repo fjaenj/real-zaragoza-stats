@@ -8,25 +8,24 @@
 <script>try{var t=JSON.parse(localStorage.getItem("rz2627_theme")||"\"auto\"");if(t!=="auto")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <title>Nobleza y valor</title>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="brand">
-    <img class="crest-img" src="https://statics-maker.llt-services.com/master-football/football-images/ef3f767b22bbfa47adfd146d81a1770f.png" alt="Escudo del Real Zaragoza" onerror="this.src='icons/icon.svg'">
-    <div>
-      <div class="brand-title">NOBLEZA Y VALOR</div>
-      <div class="brand-sub">Real Zaragoza · 26/27 · 1ª Federación G2</div>
-    </div>
-  </div>
-  <div class="top-actions">
+<header class="masthead">
+  <div class="mh-bg" aria-hidden="true"></div>
+  <div class="mh-actions">
     <button class="btn-theme" id="btnTheme" title="Tema">◐</button>
     <button class="btn-update" id="btnUpdate" title="Descargar datos nuevos">
       <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 4a8 8 0 0 1 7.4 5H17v2h6V5h-2v2.3A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8Zm8 8a8 8 0 0 1-15.4 3H7v-2H1v6h2v-2.3A10 10 0 0 0 22 12Z"/></svg>
       <span>Actualizar</span>
     </button>
+  </div>
+  <div class="mh-center">
+    <img class="mh-crest" src="icons/escudo.png" alt="Escudo del Real Zaragoza">
+    <h1 class="mh-title">Nobleza y valor</h1>
+    <div class="mh-sub">Real Zaragoza · Temporada 26/27 · 1ª Federación · Grupo 2</div>
   </div>
 </header>
 
@@ -34,7 +33,7 @@
   <button data-view="inicio" class="active"><i>⌂</i><span>Inicio</span></button>
   <button data-view="temporada"><i>📈</i><span>Temporada</span></button>
   <button data-view="campeones"><i>🏆</i><span>Campeones</span></button>
-  <button data-view="micro"><i>🎯</i><span>Micro</span></button>
+  <button data-view="micro"><i>🎯</i><span>Microobjetivos</span></button>
   <button data-view="plantilla"><i>👥</i><span>Plantilla</span></button>
   <button data-view="acta"><i>📝</i><span>Acta</span></button>
 </nav>

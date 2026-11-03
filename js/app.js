@@ -110,7 +110,10 @@ function allPlayers() { return [...S.squad.players, ..._extra.values()]; }
 function photoOf(p) { return S.user.photos[p.key] || p.photo || null; }
 
 /* ---------- modelo de partidos ---------- */
-const team = code => S.season.teams.find(t => t.code === code) || { short: code, code };
+const team = code => S.season.teams.find(t => t.code === code) || { short: code, code, name: code };
+const crest = (code, cls = '') => { const t = team(code); return t.shield ? `<img class="crest ${cls}" src="${esc(t.shield)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : ''; };
+const champCrest = (name, cls = '') => { const u = (S.season.champShields || {})[name]; return u ? `<img class="crest ${cls}" src="${esc(u)}" alt="" loading="lazy" onerror="this.style.visibility='hidden'">` : ''; };
+const venueIcon = home => `<span class="vic" title="${home ? 'En casa' : 'Fuera'}">${home ? '🏠' : '✈️'}</span>`;
 function official(j) { const m = S.official.matches && S.official.matches[j]; return m && (m.finished || (m.lineups && m.lineups.zar && m.lineups.zar.length)) ? m : null; }
 function officialFinal(j) { const m = official(j); return m && m.finished && m.hs != null ? m : null; }
 function fixtures() {
@@ -297,11 +300,11 @@ function rInicio() {
   <div class="grid g2" style="margin-top:14px">
     <div class="card">
       <h3>Próximo partido</h3>
-      ${next ? `<div class="sub">Jornada ${next.j} · ${next.kickoff ? dateTimeES(next.kickoff) : dateES(next.date) + ' (fecha de jornada)'}</div>
+      ${next ? `<div class="sub">Jornada ${next.j} · ${next.kickoff ? dateTimeES(next.kickoff) : dateES(next.date) + ' (fecha de jornada)'} · ${next.home ? '🏠 Ibercaja Estadio' : '✈️ ' + esc(team(next.opp).city) + ' · ' + esc(team(next.opp).stadium)}</div>
       <div class="next">
-        <div class="team">${badge(next.home ? 'ZAR' : next.opp)}${esc(next.home ? 'Real Zaragoza' : team(next.opp).short)}</div>
+        <div class="team">${badge(next.home ? 'ZAR' : next.opp)}${esc(next.home ? 'Real Zaragoza' : team(next.opp).name)}</div>
         <div class="vs">VS</div>
-        <div class="team">${badge(next.home ? next.opp : 'ZAR')}${esc(next.home ? team(next.opp).short : 'Real Zaragoza')}</div>
+        <div class="team">${badge(next.home ? next.opp : 'ZAR')}${esc(next.home ? team(next.opp).name : 'Real Zaragoza')}</div>
       </div>
       <div class="row" style="justify-content:center;margin-top:12px">${oppInfo(next.opp)}</div>` : '<p class="muted">Temporada terminada</p>'}
     </div>
@@ -344,8 +347,8 @@ function rInicio() {
   });
 }
 function badge(code) {
-  if (code === 'ZAR') return `<div class="badge zar"><img src="${esc(S.squad.shield)}" alt="" onerror="this.replaceWith(document.createTextNode('RZ'))"></div>`;
-  return `<div class="badge">${esc(code)}</div>`;
+  const t = team(code);
+  return `<div class="badge">${t.shield ? `<img src="${esc(t.shield)}" alt="" onerror="this.replaceWith(document.createTextNode('${esc(code)}'))">` : esc(code)}</div>`;
 }
 function oppInfo(code) {
   const o = standings().find(s => s.code === code); if (!o) return '';
@@ -372,7 +375,7 @@ function rTemporada() {
   <div class="section-title"><h2>Clasificación</h2><small>Grupo 2 · desempate por diferencia de goles (sin enfrentamiento directo)</small></div>
   <div class="card"><div class="table-wrap"><table>
     <thead><tr><th>#</th><th style="text-align:left">Equipo</th><th>PJ</th><th>V</th><th>E</th><th>D</th><th>GF</th><th>GC</th><th>DG</th><th>Pts</th><th>Forma</th></tr></thead>
-    <tbody>${st.map(s => `<tr class="${s.code === S.season.team ? 'me' : ''}"><td><span class="zone ${zone(s.pos)}"></span>${s.pos}</td><td class="t">${esc(team(s.code).short)}</td><td>${s.pj}</td><td>${s.w}</td><td>${s.d}</td><td>${s.l}</td><td>${s.gf}</td><td>${s.ga}</td><td>${s.gf - s.ga > 0 ? '+' : ''}${s.gf - s.ga}</td><td><b>${s.pts}</b></td><td><div class="form" style="gap:3px">${s.form.slice(-5).map(r => `<b class="${r}" style="width:16px;height:16px;font-size:9px;border-radius:4px">${{ W: 'V', D: 'E', L: 'D' }[r]}</b>`).join('')}</div></td></tr>`).join('')}</tbody>
+    <tbody>${st.map(s => `<tr class="${s.code === S.season.team ? 'me' : ''}"><td><span class="zone ${zone(s.pos)}"></span>${s.pos}</td><td class="t">${crest(s.code, 'sm')}${esc(team(s.code).short)}</td><td>${s.pj}</td><td>${s.w}</td><td>${s.d}</td><td>${s.l}</td><td>${s.gf}</td><td>${s.ga}</td><td>${s.gf - s.ga > 0 ? '+' : ''}${s.gf - s.ga}</td><td><b>${s.pts}</b></td><td><div class="form" style="gap:3px">${s.form.slice(-5).map(r => `<b class="${r}" style="width:16px;height:16px;font-size:9px;border-radius:4px">${{ W: 'V', D: 'E', L: 'D' }[r]}</b>`).join('')}</div></td></tr>`).join('')}</tbody>
   </table></div>
   <div class="legend"><span><i style="background:var(--win)"></i>Ascenso directo</span><span><i style="background:var(--blue2)"></i>Play-off</span><span><i style="background:var(--loss)"></i>Descenso</span></div></div>
 
@@ -394,7 +397,8 @@ function rTemporada() {
   </div>` : ''}
 
   <div class="section-title"><h2>Partidos</h2><small>Toca un partido para ver la ficha</small></div>
-  <div class="matches">${ms.map(m => `<div class="match ${m.res || official(m.j) ? 'clickable' : ''}" data-j="${m.j}"><div class="j">J${m.j}</div><div class="opp">${m.home ? 'vs' : 'en'} ${esc(team(m.opp).short)}<small>${m.home ? 'Ibercaja Estadio' : (m.venue || 'Fuera')} · ${m.kickoff ? dateTimeES(m.kickoff) : dateES(m.date)}${official(m.j) ? ' · ✓ oficial' : S.user.actas[m.j] ? ' · 📝 acta' : ''}</small></div>${m.res ? `<div class="score ${m.res}">${m.home ? m.gf + '-' + m.ga : m.ga + '-' + m.gf}</div>` : '<div class="score pend">—</div>'}</div>`).join('')}</div>
+  <div class="legend" style="margin:-4px 2px 10px"><span>🏠 En casa</span><span>✈️ Fuera</span><span class="muted">El marcador va siempre con el equipo local delante</span></div>
+  <div class="matches">${ms.map(m => { const t = team(m.opp); return `<div class="match ${m.home ? 'home' : 'away'} ${m.res || official(m.j) ? 'clickable' : ''}" data-j="${m.j}"><div class="j">J${m.j}</div>${crest(m.opp)}<div class="opp"><b>${esc(t.name)}</b><div class="where">${venueIcon(m.home)}<span>${m.home ? 'Ibercaja Estadio' : esc(t.city) + ' · ' + esc(t.stadium)} · ${m.kickoff ? dateTimeES(m.kickoff) : dateES(m.date)}${official(m.j) ? ' · ✓' : S.user.actas[m.j] ? ' · 📝' : ''}</span></div></div>${m.res ? `<div class="score ${m.res}">${m.home ? m.gf + '-' + m.ga : m.ga + '-' + m.gf}</div>` : '<div class="score pend">—</div>'}</div>`; }).join('')}</div>
   ${footer()}`;
   $$('#view-temporada .match.clickable').forEach(el => el.onclick = () => matchDialog(+el.dataset.j));
 
@@ -438,7 +442,7 @@ function statBar(z, o) { if (z == null || o == null || z + o === 0) return ''; c
 function matchDialog(j) {
   const m = zarMatches().find(x => x.j === j), d = matchDetail(j), om = official(j);
   const name = k => esc(player(k).short || player(k).name);
-  const homeName = m.home ? 'Real Zaragoza' : team(m.opp).short, awayName = m.home ? team(m.opp).short : 'Real Zaragoza';
+  const homeName = m.home ? 'Real Zaragoza' : team(m.opp).name, awayName = m.home ? team(m.opp).name : 'Real Zaragoza';
   const evs = [];
   if (d) {
     d.goals.forEach(g => evs.push({ min: g.min, side: 'ZAR', ic: '⚽', txt: g.og ? `Gol en propia de ${esc(g.ogBy || 'rival')}` : `${name(g.player)}${g.pen ? ' (pen.)' : ''}${g.assist ? ` <small>asist. ${name(g.assist)}</small>` : ''}` }));
@@ -452,7 +456,7 @@ function matchDialog(j) {
   const rows = S2 ? [['Posesión', 'possessionPercentage', '%'], ['Tiros', 'totalScoringAtt'], ['A puerta', 'ontargetScoringAtt'], ['Fuera', 'shotOffTarget'], ['Pases', 'totalPass'], ['Pases buenos', 'accuratePass'], ['Córners', 'cornerTaken'], ['Faltas', 'fouls'], ['Entradas', 'totalTackle'], ['Intercepciones', 'interception'], ['Fueras de juego', 'totalOffside'], ['Saques de banda', 'totalThrows']].filter(([, k]) => S2.zar[k] != null) : [];
   const dlg = $('#dlg');
   dlg.innerHTML = `<div class="dlg-body">
-    <div class="dlg-head"><div><div class="muted small">Jornada ${j} · ${m.kickoff ? dateTimeES(m.kickoff) : dateES(m.date)}${om && om.venue ? ' · ' + esc(om.venue) : ''}</div><h2 style="font-size:26px">${esc(homeName)} ${m.res ? `${m.home ? m.gf : m.ga} - ${m.home ? m.ga : m.gf}` : 'vs'} ${esc(awayName)}</h2></div><button class="x" onclick="this.closest('dialog').close()">✕</button></div>
+    <div class="dlg-head"><div><div class="muted small">Jornada ${j} · ${m.kickoff ? dateTimeES(m.kickoff) : dateES(m.date)} · ${m.home ? '🏠 Ibercaja Estadio' : '✈️ ' + esc(team(m.opp).city) + ' (' + esc((om && om.venue) || team(m.opp).stadium) + ')'}</div><h2 style="font-size:24px">${esc(homeName)} – ${esc(awayName)}</h2><div class="dlg-teams">${crest(m.home ? 'ZAR' : m.opp)}<span class="sc">${m.res ? `${m.home ? m.gf : m.ga} - ${m.home ? m.ga : m.gf}` : 'vs'}</span>${crest(m.home ? m.opp : 'ZAR')}</div></div><button class="x" onclick="this.closest('dialog').close()">✕</button></div>
     ${om ? `<div class="row small muted" style="margin-bottom:10px">${om.referee ? '🧑‍⚖️ ' + esc(om.referee) : ''}${om.att ? ' · 👥 ' + om.att.toLocaleString('es-ES') : ''}${om.form ? ` · Sistema RZ: ${esc((m.home ? om.form.home : om.form.away) || '').split('').join('-')}` : ''}</div>` : ''}
     ${!d ? '<p class="muted">Sin datos de este partido todavía.</p>' : `
     <h3 style="font-size:20px">Minuto a minuto</h3>
@@ -483,7 +487,7 @@ function rCampeones() {
       <div class="foot">MEDIA PARTIDO (J${n}): <b style="color:#1747c9">${fmt(ppg, 2)}</b> PUNTOS</div></div>
     ${cs.map((x, i) => { const col = CHAMP_COLORS[x.champion] || '#999', atN = x.curve[Math.max(0, n - 1)], diff = pts - atN; return `
     <div class="ccard"><div class="rank">${i + 2}</div>
-      <div class="head"><div class="chip" style="background:${col}">${CHAMP_ABBR[x.champion] || ''}</div><div><div class="name">${esc(x.champion)}</div><div class="meta">${x.season} · Grupo ${x.group} · ${x.record.w}V ${x.record.d}E ${x.record.l}D</div></div></div>
+      <div class="head"><div class="chip shield" style="border-color:${col}">${champCrest(x.champion) || CHAMP_ABBR[x.champion]}</div><div><div class="name">${esc(x.champion)}</div><div class="meta">${x.season} · Grupo ${x.group} · ${x.record.w}V ${x.record.d}E ${x.record.l}D</div></div></div>
       <div class="cols"><div><div class="colh">DATOS</div><div class="big" style="color:${diff > 0 ? '#c0392b' : '#0a1430'}"><small>J${n}:</small>${atN}</div><div class="unit">PUNTOS · <span style="color:${diff >= 0 ? '#16a36f' : '#c0392b'}">RZ ${diff >= 0 ? '+' : ''}${diff}</span></div></div><div class="sep"></div>
       <div><div class="colh">FINAL LIGA</div><div class="big">${x.points}</div><div class="unit">PUNTOS</div></div></div>
       <div class="foot">MEDIA PARTIDO (LIGA): <b style="color:${col}">${fmt(x.points / 38, 2)}</b> PUNTOS</div></div>`; }).join('')}
@@ -500,8 +504,8 @@ function rCampeones() {
 
   <div class="card" style="margin-top:14px"><h3>Ficha de los campeones</h3><div class="table-wrap"><table>
     <thead><tr><th style="text-align:left">Campeón</th><th>Temp.</th><th>Gr.</th><th>J${n}</th><th>J19</th><th>Final</th><th>Pts/P</th><th>GF</th><th>GC</th><th>2º</th></tr></thead>
-    <tbody>${S.history.seasons.map(x => `<tr><td class="t"><span class="zone" style="background:${CHAMP_COLORS[x.champion]}"></span>${esc(x.champion)}</td><td>${x.season}</td><td>${x.group}</td><td>${x.curve[Math.max(0, n - 1)]}</td><td>${x.curve[18]}</td><td><b>${x.points}</b></td><td>${fmt(x.points / 38, 2)}</td><td>${x.record.gf}</td><td>${x.record.ga}</td><td>${x.final.second}</td></tr>`).join('')}
-    <tr class="me"><td class="t">Real Zaragoza</td><td>26/27</td><td>2</td><td>${pts}</td><td>${cum[18] ?? '–'}</td><td>${fmt(ppg * 38, 1)}*</td><td>${fmt(ppg, 2)}</td><td colspan="3" class="muted">* proyección</td></tr></tbody></table></div>
+    <tbody>${S.history.seasons.map(x => `<tr><td class="t"><span class="zone" style="background:${CHAMP_COLORS[x.champion]}"></span>${champCrest(x.champion, 'sm')}${esc(x.champion)}</td><td>${x.season}</td><td>${x.group}</td><td>${x.curve[Math.max(0, n - 1)]}</td><td>${x.curve[18]}</td><td><b>${x.points}</b></td><td>${fmt(x.points / 38, 2)}</td><td>${x.record.gf}</td><td>${x.record.ga}</td><td>${x.final.second}</td></tr>`).join('')}
+    <tr class="me"><td class="t"><span class="zone"></span>${crest('ZAR', 'sm')}Real Zaragoza</td><td>26/27</td><td>2</td><td>${pts}</td><td>${cum[18] ?? '–'}</td><td>${fmt(ppg * 38, 1)}*</td><td>${fmt(ppg, 2)}</td><td colspan="3" class="muted">* proyección</td></tr></tbody></table></div>
     <p class="muted small" style="margin-top:8px">Tenerife 25/26: 76 puntos según la clasificación oficial (22V 10E 6D). Algunas infografías lo dan con 74.</p></div>
   ${footer()}`;
 
@@ -548,7 +552,7 @@ function blockCard(b) {
   return `<div class="bh"><h3>Bloque ${b.i} <small class="muted" style="font-family:Inter;font-size:12px">J${b.from}-J${b.to}</small></h3><div class="pts">${b.pts}<small>/${b.target}</small></div></div>
   <div class="bar"><i style="width:${pct}%"></i><span class="tgt" style="left:${tg}%"></span></div>
   <div class="row" style="justify-content:space-between;margin-top:8px"><span class="small">${label}</span><span class="small muted">${b.pts - b.target >= 0 && b.played === b.size ? '+' + (b.pts - b.target) + ' de superávit' : ''}</span></div>
-  <div class="mini">${b.games.map(m => `<div class="${m.res || ''}"><b>${m.res ? (m.home ? m.gf + '-' + m.ga : m.ga + '-' + m.gf) : '·'}</b>${m.home ? '' : '@'}${esc(team(m.opp).code)}</div>`).join('')}</div>`;
+  <div class="mini">${b.games.map(m => `<div class="${m.res || ''}" title="${esc(team(m.opp).name)} (${m.home ? 'casa' : 'fuera'})">${crest(m.opp)}<b>${m.res ? (m.home ? m.gf + '-' + m.ga : m.ga + '-' + m.gf) : '·'}</b><small>${m.home ? '🏠' : '✈️'}</small></div>`).join('')}</div>`;
 }
 function rMicro() {
   const c = C(), B = microBlocks(), done = B.filter(b => b.status === 'ok' || b.status === 'ko'), ok = B.filter(b => b.status === 'ok').length;
@@ -670,7 +674,7 @@ function playerDialog(key) {
   if (p.log.length) {
     const L = [...p.log].sort((a, b) => a.j - b.j);
     chart('cPlog', { type: 'bar', data: { labels: L.map(x => 'J' + x.j), datasets: [{ data: L.map(x => x.min), backgroundColor: L.map(x => x.start ? c.zar : '#5b8cff'), borderRadius: 5 }] },
-      options: { scales: { y: gridY({ max: 95 }), x: noGrid() }, plugins: { tooltip: { callbacks: { label: x => { const e = L[x.dataIndex]; return `${e.min}' vs ${team(e.opp).short} ${e.start ? '(titular)' : '(suplente)'}${e.g ? ' · ⚽' + e.g : ''}${e.a ? ' · 🅰️' + e.a : ''}${e.y ? ' · 🟨' : ''}${e.r ? ' · 🟥' : ''}`; } } } } } });
+      options: { scales: { y: gridY({ max: 95 }), x: noGrid() }, plugins: { tooltip: { callbacks: { label: x => { const e = L[x.dataIndex]; return `${e.min}' · ${team(e.opp).name} ${e.start ? '(titular)' : '(suplente)'}${e.g ? ' · ⚽' + e.g : ''}${e.a ? ' · 🅰️' + e.a : ''}${e.y ? ' · 🟨' : ''}${e.r ? ' · 🟥' : ''}`; } } } } } });
   }
 }
 
@@ -680,7 +684,7 @@ function rActa() {
   const firstPending = ms.find(m => m.res && !official(m.j) && !S.user.actas[m.j]) || ms.find(m => m.res && official(m.j) && officialNeedsAssists(m.j)) || ms.find(m => !m.res) || ms[ms.length - 1];
   const def = S.actaJ || firstPending.j; S.actaJ = def;
   const m = ms.find(x => x.j === def);
-  const sel = `<label>Jornada<select id="aJ">${ms.map(x => `<option value="${x.j}" ${x.j === def ? 'selected' : ''}>J${x.j} · ${x.home ? 'vs' : 'en'} ${esc(team(x.opp).short)}${official(x.j) ? ' ✓ oficial' : S.user.actas[x.j] ? ' 📝' : ''}</option>`).join('')}</select></label>`;
+  const sel = `<label>Jornada<select id="aJ">${ms.map(x => `<option value="${x.j}" ${x.j === def ? 'selected' : ''}>J${x.j} · ${esc(team(x.opp).name)} (${x.home ? 'casa' : 'fuera'})${official(x.j) ? ' ✓ oficial' : S.user.actas[x.j] ? ' 📝' : ''}</option>`).join('')}</select></label>`;
   $('#view-acta').innerHTML = `<div class="section-title"><h2>Acta del partido</h2><small>${official(def) ? 'Datos oficiales cargados' : 'Registro manual'}</small></div>
     <div class="card">${official(def) ? actaOfficial(def, m, sel) : actaManual(def, m, sel)}</div>${settingsCard()}`;
   $('#aJ').onchange = e => { S.actaJ = +e.target.value; rActa(); };
