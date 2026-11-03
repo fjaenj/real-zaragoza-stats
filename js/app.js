@@ -65,7 +65,12 @@ async function boot() {
   renderAll();
   const last = S.user.wikiAt ? new Date(S.user.wikiAt).getTime() : 0;
   if (Date.now() - last > 6 * 3600e3) updateFromWikipedia({ silent: true }).catch(() => { });
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => { });
+  if ('serviceWorker' in navigator) {
+    // si hay una versión nueva del service worker, recarga una vez para estrenarla
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (!reloaded) { reloaded = true; location.reload(); } });
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(r => r.update()).catch(() => { });
+  }
 }
 function pickNewer(a, b) { if (!a) return b; if (!b) return a; return (new Date(a.updatedAt || 0) >= new Date(b.updatedAt || 0)) ? a : b; }
 function migrateUser(u) {
