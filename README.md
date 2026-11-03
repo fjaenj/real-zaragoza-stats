@@ -1,6 +1,6 @@
-# Blanquillos 26/27
+# Nobleza y valor
 
-App personal de seguimiento estadístico del Real Zaragoza en Primera Federación (Grupo 2), temporada 2026/27.
+App personal (no oficial) de seguimiento estadístico del Real Zaragoza en Primera Federación (Grupo 2), temporada 2026/27.
 
 ## Secciones
 - **Inicio**: posición, puntos, proyección, próximo partido, microobjetivo en curso y ritmo de puntos.

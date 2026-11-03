@@ -1,0 +1,345 @@
+{
+ "updated": "2026-11-03",
+ "source": "realzaragoza.com/plantilla",
+ "coach": "Ibai Gómez",
+ "players": [
+  {
+   "key": "n1",
+   "n": 1,
+   "name": "Sem Westerveld",
+   "short": "Westerveld",
+   "pos": "POR",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/0a2f7327-3e3c-4bea-a86b-2781d4dc8e67-668.JPEG",
+   "aliases": [
+    "S. Westerveld"
+   ],
+   "first": true
+  },
+  {
+   "key": "n13",
+   "n": 13,
+   "name": "Anartz Peña",
+   "short": "Anartz",
+   "pos": "POR",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/7131c55d-5e93-4b20-8759-ea152f217acd-434.JPEG",
+   "aliases": [
+    "Anartz Peña"
+   ],
+   "first": true
+  },
+  {
+   "key": "n2",
+   "n": 2,
+   "name": "Jokin Gabilondo",
+   "short": "Gabilondo",
+   "pos": "DEF",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/dd5c7ca4-96cc-4208-9850-782504a876b7-399.JPEG",
+   "aliases": [
+    "J. Gabilondo"
+   ],
+   "first": true
+  },
+  {
+   "key": "n3",
+   "n": 3,
+   "name": "Raúl Pereira",
+   "short": "R. Pereira",
+   "pos": "DEF",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/cddcc61d-abc4-4671-9c04-817b01efc68c-637.JPEG",
+   "aliases": [
+    "Raúl Pereira"
+   ],
+   "first": true
+  },
+  {
+   "key": "n4",
+   "n": 4,
+   "name": "Hugo Barrachina",
+   "short": "Barrachina",
+   "pos": "DEF",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/b0d92e62-1f67-47c3-9d82-e2a01692a500-627.JPEG",
+   "aliases": [
+    "H. Barrachina"
+   ],
+   "first": true
+  },
+  {
+   "key": "n5",
+   "n": 5,
+   "name": "Tachi",
+   "short": "Tachi",
+   "pos": "DEF",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/bb79cc01-6168-457c-b0ed-3d297e8bac36-546.JPEG",
+   "aliases": [
+    "Tachi"
+   ],
+   "first": true
+  },
+  {
+   "key": "n14",
+   "n": 14,
+   "name": "Rubo",
+   "short": "Rubo",
+   "pos": "DEF",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/11/xsmall/3efefaa1-b3ca-4200-b0ed-cff39f2f5306-918.jpg",
+   "aliases": [
+    "Rubo"
+   ],
+   "first": true
+  },
+  {
+   "key": "n18",
+   "n": 18,
+   "name": "Sergio Escudero",
+   "short": "Escudero",
+   "pos": "DEF",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/d62e6f75-1585-4ea3-8356-c475f4d73a6e-173.JPEG",
+   "aliases": [
+    "S. Escudero"
+   ],
+   "first": true
+  },
+  {
+   "key": "n21",
+   "n": 21,
+   "name": "Diego González",
+   "short": "Diego Glez.",
+   "pos": "DEF",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/15be2f3d-8924-4abf-bc33-66a712654c6d-465.JPEG",
+   "aliases": [
+    "Diego González"
+   ],
+   "first": true
+  },
+  {
+   "key": "n25",
+   "n": 25,
+   "name": "Marco Sangalli",
+   "short": "Sangalli",
+   "pos": "DEF",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/11/xsmall/3c4e2339-586d-4525-a292-bbc262bd825f-988.jpg",
+   "aliases": [
+    "Marco Sangalli"
+   ],
+   "first": true
+  },
+  {
+   "key": "n6",
+   "n": 6,
+   "name": "Peter Ademo",
+   "short": "Ademo",
+   "pos": "MED",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/8d291bab-b83a-476b-a8f2-bed8a443cdc0-530.JPEG",
+   "aliases": [
+    "P. Ademo"
+   ],
+   "first": true
+  },
+  {
+   "key": "n8",
+   "n": 8,
+   "name": "Ander Herrera",
+   "short": "Ander",
+   "pos": "MED",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/e98484df-d86e-4403-8eca-f1de9f79f612-350.JPEG",
+   "aliases": [
+    "Ander Herrera"
+   ],
+   "first": true
+  },
+  {
+   "key": "n15",
+   "n": 15,
+   "name": "Yussif Saidu",
+   "short": "Saidu",
+   "pos": "MED",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/415219fc-0733-490d-8e1b-68de3cc7e1a2-594.JPEG",
+   "aliases": [
+    "Yussif Saidu"
+   ],
+   "first": true
+  },
+  {
+   "key": "n16",
+   "n": 16,
+   "name": "Lucas Terrer",
+   "short": "Terrer",
+   "pos": "MED",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/ae6a1fb7-163e-48a2-ac86-e65010499a52-350.JPEG",
+   "aliases": [
+    "Lucas Terrer"
+   ],
+   "first": true
+  },
+  {
+   "key": "n19",
+   "n": 19,
+   "name": "Rubén Díez",
+   "short": "Rubén Díez",
+   "pos": "MED",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/1fbdac4b-64c5-4383-a55c-863c8e8a96a4-372.JPEG",
+   "aliases": [
+    "Rubén Díez"
+   ],
+   "first": true
+  },
+  {
+   "key": "n7",
+   "n": 7,
+   "name": "Marcos Cuenca",
+   "short": "Cuenca",
+   "pos": "DEL",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/b5f41977-6131-4da0-ab09-bcece917ad54-423.JPEG",
+   "aliases": [
+    "Marcos Cuenca"
+   ],
+   "first": true
+  },
+  {
+   "key": "n9",
+   "n": 9,
+   "name": "Pau Sans",
+   "short": "Pau Sans",
+   "pos": "DEL",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/84079fad-5446-4246-a789-77eacd737c59-193.JPEG",
+   "aliases": [
+    "Pau Sans"
+   ],
+   "first": true
+  },
+  {
+   "key": "n10",
+   "n": 10,
+   "name": "Hugo Pinilla",
+   "short": "Pinilla",
+   "pos": "DEL",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/cc9df9f0-bcdd-4e50-860b-42c79b30d5fa-821.JPEG",
+   "aliases": [
+    "Hugo Pinilla"
+   ],
+   "first": true
+  },
+  {
+   "key": "n11",
+   "n": 11,
+   "name": "Jaume Jardí",
+   "short": "Jardí",
+   "pos": "DEL",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/b2e07cdc-05ec-4049-a80e-2080c5f5d3b1-89.JPEG",
+   "aliases": [
+    "Jaume Jardí"
+   ],
+   "first": true
+  },
+  {
+   "key": "n17",
+   "n": 17,
+   "name": "Iker Vadillo",
+   "short": "Vadillo",
+   "pos": "DEL",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/54c44202-12cc-4e0a-8b6c-a64c3223a59f-88.JPEG",
+   "aliases": [
+    "Iker Vadillo"
+   ],
+   "first": true
+  },
+  {
+   "key": "n20",
+   "n": 20,
+   "name": "Joaquín Delgado",
+   "short": "J. Delgado",
+   "pos": "DEL",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/11/xsmall/f263f0b5-e6bb-4b1a-a8bc-a6ae1f42742a-418.jpg",
+   "aliases": [
+    "Joaquín"
+   ],
+   "first": true
+  },
+  {
+   "key": "n22",
+   "n": 22,
+   "name": "Edu Espiau",
+   "short": "Espiau",
+   "pos": "DEL",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/08/xsmall/ce98502d-9253-48eb-a631-511931359105-513.JPEG",
+   "aliases": [
+    "Edu Espiau"
+   ],
+   "first": true
+  },
+  {
+   "key": "n23",
+   "n": 23,
+   "name": "Óscar Ureña",
+   "short": "Ureña",
+   "pos": "DEL",
+   "photo": "https://statics-maker.llt-services.com/zar/images/2026/09/11/xsmall/5317da9c-b612-43eb-a81f-f285f9595fec-643.jpg",
+   "aliases": [
+    "Óscar Ureña"
+   ],
+   "first": true
+  },
+  {
+   "key": "n26",
+   "n": 26,
+   "name": "Diego Monzón",
+   "short": "Monzón",
+   "pos": "FIL",
+   "photo": null,
+   "aliases": [
+    "Diego Monzón"
+   ],
+   "first": false
+  },
+  {
+   "key": "n30",
+   "n": 30,
+   "name": "Laken Torres",
+   "short": "L. Torres",
+   "pos": "FIL",
+   "photo": null,
+   "aliases": [
+    "Laken Torres"
+   ],
+   "first": false
+  },
+  {
+   "key": "n31",
+   "n": 31,
+   "name": "Jaime Tobajas",
+   "short": "Tobajas",
+   "pos": "FIL",
+   "photo": null,
+   "aliases": [
+    "J. Tobajas"
+   ],
+   "first": false
+  },
+  {
+   "key": "n40",
+   "n": 40,
+   "name": "Mihai Manolache",
+   "short": "Manolache",
+   "pos": "FIL",
+   "photo": null,
+   "aliases": [
+    "M. Manolache"
+   ],
+   "first": false
+  }
+ ],
+ "assistsBase": {
+  "upto": 10,
+  "source": "AupaZaragoza.com",
+  "byKey": {
+   "n21": 1,
+   "n10": 1,
+   "n19": 1,
+   "n23": 1,
+   "n9": 1,
+   "n11": 4,
+   "n22": 2
+  }
+ },
+ "shield": "https://statics-maker.llt-services.com/master-football/football-images/ef3f767b22bbfa47adfd146d81a1770f.png"
+}

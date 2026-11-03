@@ -1,0 +1,41 @@
+name: Datos oficiales
+
+on:
+  schedule:
+    # Viernes a lunes cada 2 horas (días de partido) y martes a jueves una vez al día
+    - cron: '25 */2 * * 5,6,0,1'
+    - cron: '25 8 * * 2,3,4'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Jornadas a forzar (ej. 9,10)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: datos-oficiales
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Descargar fichas de partido de realzaragoza.com
+        env:
+          FORCE_J: ${{ github.event.inputs.force }}
+        run: node tools/fetch_official.mjs
+      - name: Guardar cambios
+        run: |
+          if git diff --quiet -- data/official.json; then echo "Sin cambios"; exit 0; fi
+          git config user.name "nobleza-y-valor-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/official.json
+          git commit -m "Datos oficiales $(date -u +'%Y-%m-%d %H:%M')"
+          git push

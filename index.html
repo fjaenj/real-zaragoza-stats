@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0a1430">
-<title>Blanquillos 26/27</title>
+<meta name="color-scheme" content="dark light">
+<script>try{var t=JSON.parse(localStorage.getItem("rz2627_theme")||"\"auto\"");if(t!=="auto")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<title>Nobleza y valor</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -13,16 +15,19 @@
 <body>
 <header class="topbar">
   <div class="brand">
-    <svg class="crest" viewBox="0 0 40 46" aria-hidden="true"><path d="M20 1 38 7v15c0 12-8 19-18 23C10 41 2 34 2 22V7Z" fill="#fff"/><path d="M20 5 34 9.5V22c0 9.5-6 15.5-14 19-8-3.5-14-9.5-14-19V9.5Z" fill="#1747c9"/><text x="20" y="28" text-anchor="middle" font-family="Bebas Neue, sans-serif" font-size="15" fill="#fff">RZ</text></svg>
+    <img class="crest-img" src="https://statics-maker.llt-services.com/master-football/football-images/ef3f767b22bbfa47adfd146d81a1770f.png" alt="Escudo del Real Zaragoza" onerror="this.src='icons/icon.svg'">
     <div>
-      <div class="brand-title">BLANQUILLOS <span>26/27</span></div>
-      <div class="brand-sub" id="brandSub">Primera Federación · Grupo 2</div>
+      <div class="brand-title">NOBLEZA Y VALOR</div>
+      <div class="brand-sub">Real Zaragoza · 26/27 · 1ª Federación G2</div>
     </div>
   </div>
-  <button class="btn-update" id="btnUpdate" title="Descargar resultados nuevos">
-    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 4a8 8 0 0 1 7.4 5H17v2h6V5h-2v2.3A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8Zm8 8a8 8 0 0 1-15.4 3H7v-2H1v6h2v-2.3A10 10 0 0 0 22 12Z"/></svg>
-    <span>Actualizar</span>
-  </button>
+  <div class="top-actions">
+    <button class="btn-theme" id="btnTheme" title="Tema">◐</button>
+    <button class="btn-update" id="btnUpdate" title="Descargar datos nuevos">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 4a8 8 0 0 1 7.4 5H17v2h6V5h-2v2.3A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8Zm8 8a8 8 0 0 1-15.4 3H7v-2H1v6h2v-2.3A10 10 0 0 0 22 12Z"/></svg>
+      <span>Actualizar</span>
+    </button>
+  </div>
 </header>
 
 <nav class="tabs" id="tabs">

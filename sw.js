@@ -1,5 +1,5 @@
 // Cache de la app. Sube CACHE_VERSION cada vez que cambies archivos de la app.
-const CACHE_VERSION = 'rz2627-v1';
+const CACHE_VERSION = 'rz2627-v2';
 const SHELL = ['./', 'index.html', 'css/app.css', 'js/app.js', 'js/vendor/chart.umd.js', 'manifest.webmanifest', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png',
   'fonts/bebas-neue-latin-400-normal.woff2', 'fonts/inter-latin-400-normal.woff2', 'fonts/inter-latin-500-normal.woff2', 'fonts/inter-latin-600-normal.woff2', 'fonts/inter-latin-700-normal.woff2', 'fonts/inter-latin-800-normal.woff2'];
 
