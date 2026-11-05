@@ -280,7 +280,7 @@ code{font-size:12px;background:var(--bg2);padding:1px 5px;border-radius:5px}
 
 /* --- v3: cabecera grande con foto --- */
 .masthead{position:relative;overflow:hidden;color:#fff;text-align:center;padding:30px 16px 34px;isolation:isolate}
-.mh-bg{position:absolute;inset:-24px;z-index:-2;background:url(../img/cabecera.jpg) center 62%/cover no-repeat;filter:blur(5px) saturate(1.15);transform:scale(1.04)}
+.mh-bg{position:absolute;inset:-24px;z-index:-2;background:url(../img/cabecera-2.jpg) center 62%/cover no-repeat;filter:blur(2.5px) saturate(1.12);transform:scale(1.03)}
 .masthead::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(8,18,52,.55) 0%,rgba(10,30,90,.62) 55%,rgba(8,18,52,.86) 100%)}
 .masthead::before{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;z-index:1;background:linear-gradient(90deg,#1747c9,#ffffff 50%,#1747c9)}
 .mh-center{display:flex;flex-direction:column;align-items:center;gap:6px}
@@ -329,3 +329,18 @@ td.t{display:flex;align-items:center}
 .dlg-teams{display:flex;align-items:center;justify-content:center;gap:12px;margin:6px 0 4px}
 .dlg-teams .crest{width:44px;height:44px}
 .dlg-teams .sc{font-family:"Bebas Neue";font-size:40px;line-height:1}
+
+/* --- v4: tarjetas enlazadas y clasificaciones --- */
+.card.link{cursor:pointer;transition:transform .12s,border-color .12s}
+.card.link:hover{border-color:var(--blue2)}
+.card.link:active{transform:scale(.99)}
+.go{float:right;color:var(--blue2);font-family:Inter;font-weight:800;font-size:18px;line-height:1}
+.spot .k .go{float:none;font-size:14px;margin-left:4px}
+table.rank tr[data-key]{cursor:pointer}
+table.rank tr[data-key]:hover td{background:var(--bg2)}
+table.rank td.t{gap:10px}
+table.rank .avatar{margin:0;border-width:2px}
+.rk-name{display:flex;flex-direction:column;gap:4px;min-width:92px;flex:1}
+@media(max-width:480px){table.rank th,table.rank td{padding:7px 4px}table.rank .rk-name span{font-size:12.5px}}
+.rk-bar{display:block;height:4px;border-radius:2px;background:var(--track);overflow:hidden;font-style:normal}
+.rk-bar i{display:block;height:100%;background:var(--c-zar);border-radius:2px}

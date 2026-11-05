@@ -1,9 +1,9 @@
 // Nobleza y valor · service worker
 // Estrategia: red primero (siempre la versión más reciente si hay conexión) y copia local para usarla sin conexión.
-const CACHE_VERSION = 'nyv-v5';
+const CACHE_VERSION = 'nyv-v6';
 const SHELL = ['./', 'index.html', 'css/app.css', 'js/app.js', 'js/vendor/chart.umd.js', 'manifest.webmanifest',
   'icons/escudo.png', 'icons/nyv-192.png', 'icons/nyv-512.png', 'icons/nyv-maskable-512.png', 'icons/nyv-apple-180.png', 'icons/nyv-favicon.png',
-  'img/cabecera.jpg',
+  'img/cabecera-2.jpg',
   'fonts/bebas-neue-latin-400-normal.woff2', 'fonts/inter-latin-400-normal.woff2', 'fonts/inter-latin-500-normal.woff2', 'fonts/inter-latin-600-normal.woff2', 'fonts/inter-latin-700-normal.woff2', 'fonts/inter-latin-800-normal.woff2'];
 
 self.addEventListener('install', e => {

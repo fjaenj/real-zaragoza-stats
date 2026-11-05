@@ -313,8 +313,8 @@ function rInicio() {
       </div>
       <div class="row" style="justify-content:center;margin-top:12px">${oppInfo(next.opp)}</div>` : '<p class="muted">Temporada terminada</p>'}
     </div>
-    <div class="card">
-      <h3>Microobjetivo actual</h3>
+    <div class="card link" id="cardMicro" title="Ver todos los microobjetivos">
+      <h3>Microobjetivo actual <span class="go">›</span></h3>
       ${blk ? blockCard(blk) : ''}
     </div>
   </div>
@@ -327,19 +327,20 @@ function rInicio() {
   </div>
 
   ${top ? `<div class="grid g2" style="margin-top:14px">
-    <div class="card spot" data-key="${top.key}">${avatar(top, 56)}<div><span class="k">Máximo goleador</span><b>${esc(top.name)}</b><span class="d">${top.g} goles · ${top.a} asistencias</span></div></div>
-    <div class="card spot" data-key="${topMin.key}">${avatar(topMin, 56)}<div><span class="k">Más minutos</span><b>${esc(topMin.name)}</b><span class="d">${topMin.min}' · ${topMin.pt} titularidades</span></div></div>
+    <div class="card spot link" data-rank="g">${avatar(top, 56)}<div><span class="k">Máximo goleador <span class="go">›</span></span><b>${esc(top.name)}</b><span class="d">${top.g} goles · ${top.a} asistencias</span></div></div>
+    <div class="card spot link" data-rank="min">${avatar(topMin, 56)}<div><span class="k">Más minutos <span class="go">›</span></span><b>${esc(topMin.name)}</b><span class="d">${topMin.min}' · ${topMin.pt} titularidades</span></div></div>
   </div>` : ''}
 
   <div class="card" style="margin-top:14px">
     <h3>Ritmo de puntos</h3>
-    <div class="sub">Zaragoza frente a la media de los 8 últimos campeones y a la línea de microobjetivos (7 pts cada 4 partidos)</div>
+    <div class="sub">Zaragoza frente a la media de los 8 últimos campeones y al plan de microobjetivos de Ibai</div>
     <div class="chart-wrap short"><canvas id="cHomeRace"></canvas></div>
     <div class="legend"><span><i style="background:${c.zar}"></i>Zaragoza</span><span><i style="background:#f2c14e"></i>Media campeones</span><span><i style="background:#5b8cff"></i>Microobjetivos</span></div>
   </div>
   ${footer()}`;
 
-  $$('#view-inicio .spot').forEach(el => el.onclick = () => playerDialog(el.dataset.key));
+  $$('#view-inicio .spot').forEach(el => el.onclick = () => rankingDialog(el.dataset.rank));
+  $('#cardMicro').onclick = () => go('micro');
   const cum = zarCumulative(), N = Math.max(cum.length + 4, 14);
   const avg = Array.from({ length: N }, (_, i) => +(champs.reduce((s, x) => s + x.curve[i], 0) / champs.length).toFixed(2));
   chart('cHomeRace', {
@@ -347,7 +348,7 @@ function rInicio() {
     data: { labels: jLabels(N), datasets: [
       { data: cum, borderColor: c.zar, borderWidth: 3, pointRadius: 3, pointBackgroundColor: c.zar, tension: .25 },
       { data: avg, borderColor: '#f2c14e', borderWidth: 2, pointRadius: 0, borderDash: [6, 4], tension: .25 },
-      { data: Array.from({ length: N }, (_, i) => +((i + 1) * 7 / 4).toFixed(2)), borderColor: '#5b8cff', borderWidth: 2, pointRadius: 0, borderDash: [2, 4] }] },
+      { data: Array.from({ length: N }, (_, i) => microTarget(i + 1, B)), borderColor: '#5b8cff', borderWidth: 2, pointRadius: 0, borderDash: [2, 4] }] },
     options: { scales: { y: gridY({ beginAtZero: true }), x: noGrid() }, interaction: { mode: 'index', intersect: false } }
   });
 }
@@ -536,25 +537,27 @@ function rCampeones() {
 
 /* ---------- MICROOBJETIVOS ---------- */
 function microBlocks() {
+  // Ibai: «Hay que separar los dos primeros partidos y, luego, hacer nueve bloques de cuatro jornadas»
   const M = S.season.micro, ms = zarMatches(), blocks = [];
-  let j = 1, i = 1;
-  while (j <= 38) {
-    const size = (38 - j + 1) <= M.lastBlock.size ? M.lastBlock.size : M.size;
-    const target = size === M.size ? M.target : M.lastBlock.target;
+  const plan = [{ size: M.first.size, target: M.first.target, label: M.first.label }].concat(Array.from({ length: M.blocks }, () => ({ size: M.size, target: M.target })));
+  let j = 1;
+  plan.forEach((pl, i) => {
+    const { size, target } = pl;
     const games = ms.filter(m => m.j >= j && m.j < j + size);
     const played = games.filter(m => m.res), pts = sum(played, m => m.pts);
     const maxPossible = pts + (games.length - played.length) * 3;
     const status = played.length === games.length ? (pts >= target ? 'ok' : 'ko') : played.length ? 'live' : (maxPossible < target ? 'ko' : 'pending');
-    blocks.push({ i, from: j, to: j + size - 1, size, target, games, played: played.length, pts, status, need: Math.max(0, target - pts) });
-    j += size; i++;
-  }
+    blocks.push({ i, label: pl.label || `Bloque ${i}`, from: j, to: j + size - 1, size, target, games, played: played.length, pts, status, need: Math.max(0, target - pts) });
+    j += size;
+  });
   if (!blocks.some(b => b.status === 'live')) { const nx = blocks.find(b => b.status === 'pending'); if (nx) nx.status = 'live'; }
   return blocks;
 }
+function microTarget(j, B = microBlocks()) { let t = 0; B.forEach(b => { const k = Math.max(0, Math.min(j, b.to) - b.from + 1); if (k > 0) t += b.target * (k / b.size); }); return +t.toFixed(2); }
 function blockCard(b) {
   const pct = Math.min(100, b.pts / (b.size * 3) * 100), tg = b.target / (b.size * 3) * 100;
   const label = b.status === 'ok' ? '✅ Cumplido' : b.status === 'ko' ? '❌ No cumplido' : b.status === 'live' ? (b.need ? `⏳ En juego · faltan ${b.need} pts` : `✅ Objetivo ya alcanzado · ${b.size - b.played} partido${b.size - b.played > 1 ? 's' : ''} por jugar`) : 'Pendiente';
-  return `<div class="bh"><h3>Bloque ${b.i} <small class="muted" style="font-family:Inter;font-size:12px">J${b.from}-J${b.to}</small></h3><div class="pts">${b.pts}<small>/${b.target}</small></div></div>
+  return `<div class="bh"><h3>${esc(b.label)} <small class="muted" style="font-family:Inter;font-size:12px">J${b.from}-J${b.to}</small></h3><div class="pts">${b.pts}<small>/${b.target}</small></div></div>
   <div class="bar"><i style="width:${pct}%"></i><span class="tgt" style="left:${tg}%"></span></div>
   <div class="row" style="justify-content:space-between;margin-top:8px"><span class="small">${label}</span><span class="small muted">${b.pts - b.target >= 0 && b.played === b.size ? '+' + (b.pts - b.target) + ' de superávit' : ''}</span></div>
   <div class="mini">${b.games.map(m => `<div class="${m.res || ''}" title="${esc(team(m.opp).name)} (${m.home ? 'casa' : 'fuera'})">${crest(m.opp)}<b>${m.res ? (m.home ? m.gf + '-' + m.ga : m.ga + '-' + m.gf) : '·'}</b><small>${m.home ? '🏠' : '✈️'}</small></div>`).join('')}</div>`;
@@ -562,12 +565,12 @@ function blockCard(b) {
 function rMicro() {
   const c = C(), B = microBlocks(), done = B.filter(b => b.status === 'ok' || b.status === 'ko'), ok = B.filter(b => b.status === 'ok').length;
   const cum = zarCumulative(), n = cum.length, pts = cum[n - 1] || 0;
-  const target = j => { let t = 0; B.forEach(b => { const k = Math.max(0, Math.min(j, b.to) - b.from + 1); if (k > 0) t += b.target * (k / b.size); }); return +t.toFixed(2); };
+  const target = j => microTarget(j, B);
   const blockEnds = Array.from({ length: 38 }, (_, i) => B.some(x => x.to === i + 1));
   const sup = pts - target(n);
   $('#view-micro').innerHTML = `
-  <div class="section-title"><h2>Microobjetivos de Ibai</h2><small>Bloques de 4 partidos · mínimo 7 puntos</small></div>
-  <div class="note">El método que explicó Ibai Gómez: dividir la liga en bloques de cuatro jornadas y sumar al menos <b>7 puntos</b> en cada uno. Son 9 bloques de 4 partidos más un último bloque de 2 (objetivo 6), lo que da <b>69 puntos</b> si se cumplen todos.</div>
+  <div class="section-title"><h2>Microobjetivos de Ibai</h2><small>Preludio de 2 partidos + 9 bloques de 4</small></div>
+  <div class="note">«Hay que separar los dos primeros partidos y, luego, hacer nueve bloques de cuatro jornadas», explicó Ibai Gómez. El <b>preludio</b> son las jornadas 1 y 2 (Tarragona y Antequera), con el objetivo de sumar <b>6 de 6</b>. Después, <b>7 puntos de cada 12</b> en cada uno de los nueve bloques. Si se cumple todo, son <b>69 puntos</b>: según Ibai, «prácticamente, campeones de liga».</div>
   <div class="grid g4" style="margin-top:14px">
     <div class="card kpi"><span class="k">Superávit acumulado</span><span class="v ${sup >= 0 ? 'up' : 'down'}">${sup >= 0 ? '+' : ''}${fmt(sup, 1)}</span><span class="d">${pts} pts frente a ${fmt(target(n), 1)} del plan (J${n})</span></div>
     <div class="card kpi"><span class="k">Bloques cumplidos</span><span class="v">${ok}/${done.length}</span><span class="d">de los cerrados</span></div>
@@ -576,7 +579,7 @@ function rMicro() {
   </div>
   <div class="card" style="margin-top:14px"><h3>Plan vs realidad</h3><div class="sub">Puntos acumulados del Zaragoza frente al objetivo de cada bloque</div>
     <div class="chart-wrap"><canvas id="cMicro"></canvas></div>
-    <div class="legend"><span><i style="background:${c.zar}"></i>Zaragoza</span><span><i style="background:#5b8cff"></i>Plan (7 cada 4)</span><span><i style="background:#22c58b"></i>Superávit por bloque</span></div></div>
+    <div class="legend"><span><i style="background:${c.zar}"></i>Zaragoza</span><span><i style="background:#5b8cff"></i>Plan (6 + 7 cada 4)</span><span><i style="background:#22c58b"></i>Superávit por bloque</span></div></div>
   <div class="blocks" style="margin-top:14px">${B.map(b => `<div class="block ${b.status === 'ok' ? 'ok' : b.status === 'ko' ? 'ko' : b.status === 'live' ? 'live' : ''}">${blockCard(b)}</div>`).join('')}</div>
   ${footer()}`;
   chart('cMicro', { data: { labels: jLabels(38), datasets: [
@@ -657,6 +660,29 @@ function renderCompare(P) {
     { label: a.name, data: metrics.map(([, f], i) => +(f(a) / mx[i] * 100).toFixed(0)), borderColor: c.zar, backgroundColor: c.zarFill, borderWidth: 2 },
     { label: b.name, data: metrics.map(([, f], i) => +(f(b) / mx[i] * 100).toFixed(0)), borderColor: '#f2c14e', backgroundColor: '#f2c14e33', borderWidth: 2 }] },
     options: { plugins: { legend: { display: true } }, scales: { r: { min: 0, max: 100, ticks: { display: false }, grid: { color: c.grid }, angleLines: { color: c.grid }, pointLabels: { color: c.ink } } } } });
+}
+function rankingDialog(kind) {
+  const P = playerTotals(), maxMin = Math.max(1, lastRound() * 90);
+  const og = zarMatches().filter(m => m.res).reduce((s, m) => { const d = matchDetail(m.j); return s + (d ? d.goals.filter(g => g.og).length : 0); }, 0);
+  const cfg = kind === 'g'
+    ? { title: 'Goleadores', rows: P.filter(p => p.g > 0).sort((a, b) => b.g - a.g || a.min - b.min), val: p => p.g, max: null,
+        head: ['Goles', 'Pen.', "Min/gol", 'PJ'], cols: p => [`<b>${p.g}</b>`, p.pen || '–', p.g ? Math.round(p.min / p.g) + "'" : '–', p.pj],
+        foot: `${sum(P, p => p.g)} goles de jugadores${og ? ` + ${og} en propia puerta del rival` : ''}.` }
+    : { title: 'Minutos jugados', rows: P.filter(p => p.min > 0).sort((a, b) => b.min - a.min), val: p => p.min, max: maxMin,
+        head: ['Min', '%', 'PJ', 'Tit.'], cols: p => [`<b>${p.min}'</b>`, Math.round(p.min / maxMin * 100) + '%', p.pj, p.pt],
+        foot: `Sobre ${maxMin}' posibles (${lastRound()} jornadas).` };
+  const top = Math.max(...cfg.rows.map(cfg.val), 1);
+  const dlg = $('#dlg');
+  dlg.innerHTML = `<div class="dlg-body">
+    <div class="dlg-head"><h2 style="font-size:28px">${cfg.title}</h2><button class="x" onclick="this.closest('dialog').close()">✕</button></div>
+    <div class="table-wrap"><table class="rank">
+      <thead><tr><th>#</th><th style="text-align:left">Jugador</th>${cfg.head.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+      <tbody>${cfg.rows.map((p, i) => { const prev = i ? cfg.val(cfg.rows[i - 1]) : null; const pos = prev === cfg.val(p) ? '' : i + 1; return `<tr data-key="${esc(p.key)}"><td>${pos}</td><td class="t">${avatar(p, 30)}<div class="rk-name"><span>${esc(p.name)}</span><i class="rk-bar"><i style="width:${cfg.val(p) / top * 100}%"></i></i></div></td>${cfg.cols(p).map(c => `<td>${c}</td>`).join('')}</tr>`; }).join('')}</tbody>
+    </table></div>
+    <p class="muted small" style="margin-top:10px">${cfg.foot} Toca un jugador para ver su ficha.</p>
+  </div>`;
+  dlg.showModal();
+  $$('#dlg tr[data-key]').forEach(tr => tr.onclick = () => { dlg.close(); playerDialog(tr.dataset.key); });
 }
 function playerDialog(key) {
   const c = C(), P = playerTotals(), p = P.find(x => x.key === key) || { ...player(key), min: 0, pj: 0, pt: 0, g: 0, a: 0, y: 0, r: 0, log: [] }, maxMin = lastRound() * 90;
