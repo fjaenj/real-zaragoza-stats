@@ -49,7 +49,7 @@ async function loadJSON(url, optional = false) {
   try { const r = await fetch(url, { cache: 'no-cache' }); if (!r.ok) throw new Error(r.status); return await r.json(); }
   catch (e) { if (optional) return null; throw e; }
 }
-function emptyUser() { return { v: 2, updatedAt: null, results: {}, actas: {}, assists: {}, extra: {}, photos: {}, wikiAt: null }; }
+function emptyUser() { return { v: 2, updatedAt: null, results: {}, manual: {}, actas: {}, assists: {}, extra: {}, photos: {}, wikiAt: null }; }
 
 async function boot() {
   applyTheme();
@@ -61,6 +61,7 @@ async function boot() {
   S.cfg = lsGet(LS_CFG, {});
   bindNav();
   $('#btnUpdate').addEventListener('click', updateAll);
+  $('#btnActa').addEventListener('click', () => go('acta'));
   $('#btnTheme').addEventListener('click', () => { const order = ['auto', 'light', 'dark']; lsSet(LS_THEME, order[(order.indexOf(themePref()) + 1) % 3]); applyTheme(); renderAll(); toast($('#btnTheme').title); });
   renderAll();
   const last = S.user.wikiAt ? new Date(S.user.wikiAt).getTime() : 0;
@@ -233,7 +234,7 @@ function go(v, render = true) {
   if (render) renderView(v);
 }
 function renderAll() { renderView(S.view); }
-function renderView(v) { ({ inicio: rInicio, temporada: rTemporada, campeones: rCampeones, micro: rMicro, plantilla: rPlantilla, acta: rActa })[v](); }
+function renderView(v) { ({ inicio: rInicio, temporada: rTemporada, estadisticas: rEstadisticas, campeones: rCampeones, micro: rMicro, plantilla: rPlantilla, acta: rActa })[v](); }
 
 /* ---------- gráficos ---------- */
 function setupChartDefaults() {
@@ -369,23 +370,92 @@ function footer() {
 }
 
 /* ---------- TEMPORADA ---------- */
+function currentRound() { const js = fixtures().filter(f => f.hg != null).map(f => f.j); return js.length ? Math.max(...js) : 1; }
 function rTemporada() {
-  const c = C();
-  const st = standings(), ms = zarMatches(), n = lastRound();
+  const st = standings(), ms = zarMatches();
   const P = S.season.promotion;
   const zone = p => p <= P.direct ? 'z1' : (p >= P.playoff[0] && p <= P.playoff[1]) ? 'z2' : p >= P.relegation[0] ? 'z3' : 'z0';
-  const TS = teamStats();
-  const avgS = (k, side = 'z') => TS.length ? sum(TS, r => r[side][k]) / TS.filter(r => r[side][k] != null).length : null;
-  const passPct = side => { const a = sum(TS, r => r[side].accuratePass), t = sum(TS, r => r[side].totalPass); return t ? a / t * 100 : null; };
+  const nManual = Object.keys(S.user.manual || {}).length;
+  const J = S.jornada || currentRound(); S.jornada = J;
+  const fx = fixtures().filter(f => f.j === J);
+  const dates = {}; S.season.fixtures.forEach(f => { dates[f.j] = dates[f.j] || f.date; });
+  const nPlayed = fx.filter(f => f.hg != null).length;
   $('#view-temporada').innerHTML = `
-  <div class="section-title"><h2>Clasificación</h2><small>Grupo 2 · desempate por diferencia de goles (sin enfrentamiento directo)</small></div>
+  <div class="section-title"><h2>Clasificación</h2><small>Tras la jornada ${currentRound()}${nManual ? ` · incluye ${nManual} resultado${nManual > 1 ? 's' : ''} metido${nManual > 1 ? 's' : ''} a mano` : ''}</small></div>
   <div class="card"><div class="table-wrap"><table>
     <thead><tr><th>#</th><th style="text-align:left">Equipo</th><th>PJ</th><th>V</th><th>E</th><th>D</th><th>GF</th><th>GC</th><th>DG</th><th>Pts</th><th>Forma</th></tr></thead>
     <tbody>${st.map(s => `<tr class="${s.code === S.season.team ? 'me' : ''}"><td><span class="zone ${zone(s.pos)}"></span>${s.pos}</td><td class="t">${crest(s.code, 'sm')}${esc(team(s.code).short)}</td><td>${s.pj}</td><td>${s.w}</td><td>${s.d}</td><td>${s.l}</td><td>${s.gf}</td><td>${s.ga}</td><td>${s.gf - s.ga > 0 ? '+' : ''}${s.gf - s.ga}</td><td><b>${s.pts}</b></td><td><div class="form" style="gap:3px">${s.form.slice(-5).map(r => `<b class="${r}" style="width:16px;height:16px;font-size:9px;border-radius:4px">${{ W: 'V', D: 'E', L: 'D' }[r]}</b>`).join('')}</div></td></tr>`).join('')}</tbody>
   </table></div>
-  <div class="legend"><span><i style="background:var(--win)"></i>Ascenso directo</span><span><i style="background:var(--blue2)"></i>Play-off</span><span><i style="background:var(--loss)"></i>Descenso</span></div></div>
+  <div class="legend"><span><i style="background:var(--win)"></i>Ascenso directo</span><span><i style="background:var(--blue2)"></i>Play-off</span><span><i style="background:var(--loss)"></i>Descenso</span><span class="muted">Desempate por diferencia de goles</span></div></div>
 
-  <div class="grid g2" style="margin-top:14px">
+  <div class="section-title"><h2>Jornada</h2>
+    <div class="jsel"><button class="btn" id="jPrev" ${J <= 1 ? 'disabled' : ''} aria-label="Jornada anterior">‹</button>
+      <select id="jSel">${Array.from({ length: 38 }, (_, i) => i + 1).map(j => `<option value="${j}" ${j === J ? 'selected' : ''}>J${j} · ${dateES(dates[j]).slice(0, 5)}${j === currentRound() ? ' · actual' : ''}</option>`).join('')}</select>
+      <button class="btn" id="jNext" ${J >= 38 ? 'disabled' : ''} aria-label="Jornada siguiente">›</button></div></div>
+  <div class="card">
+    <div class="sub">${nPlayed}/${fx.length} partidos con resultado · fecha de la jornada: ${dateES(dates[J])}</div>
+    <div class="fixtures">${fx.map(f => fixtureRow(f)).join('')}</div>
+    <p class="muted small" style="margin-top:10px">Los resultados llegan solos (Wikipedia y, el del Zaragoza, la web oficial). Si aún no aparece alguno, toca ✏️ para meterlo a mano: cuando se publique, se queda el oficial.</p>
+  </div>
+
+  <div class="section-title"><h2>Partidos del Zaragoza</h2><small>Toca un partido para ver la ficha</small></div>
+  <div class="legend" style="margin:-4px 2px 10px"><span>🏠 En casa</span><span>✈️ Fuera</span><span class="muted">El marcador va siempre con el equipo local delante</span></div>
+  <div class="matches">${ms.map(m => { const t = team(m.opp); return `<div class="match ${m.home ? 'home' : 'away'} ${m.res || official(m.j) ? 'clickable' : ''}" data-j="${m.j}"><div class="j">J${m.j}</div>${crest(m.opp)}<div class="opp"><b>${esc(t.name)}</b><div class="where">${venueIcon(m.home)}<span>${m.home ? 'Ibercaja Estadio' : esc(t.city) + ' · ' + esc(t.stadium)} · ${m.kickoff ? dateTimeES(m.kickoff) : dateES(m.date)}${official(m.j) ? ' · ✓' : S.user.actas[m.j] ? ' · 📝' : ''}</span></div></div>${m.res ? `<div class="score ${m.res}">${m.home ? m.gf + '-' + m.ga : m.ga + '-' + m.gf}</div>` : '<div class="score pend">—</div>'}</div>`; }).join('')}</div>
+  ${footer()}`;
+  $$('#view-temporada .match.clickable').forEach(el => el.onclick = () => matchDialog(+el.dataset.j));
+  $('#jSel').onchange = e => { S.jornada = +e.target.value; rTemporada(); $('#jSel').scrollIntoView({ block: 'center' }); };
+  $('#jPrev').onclick = () => { S.jornada = Math.max(1, J - 1); rTemporada(); $('#jSel').scrollIntoView({ block: 'center' }); };
+  $('#jNext').onclick = () => { S.jornada = Math.min(38, J + 1); rTemporada(); $('#jSel').scrollIntoView({ block: 'center' }); };
+  $$('#view-temporada .fx[data-zar]').forEach(el => el.onclick = e => { if (!e.target.closest('button,input')) matchDialog(+el.dataset.j); });
+  $$('#view-temporada [data-edit]').forEach(b => b.onclick = e => { e.stopPropagation(); editResult(b.dataset.edit); });
+}
+const fxName = code => code === 'ZAR' ? 'Zaragoza' : team(code).short;
+function fixtureRow(f) {
+  const k = `${f.h}_${f.a}`, me = S.season.team, zar = f.h === me || f.a === me;
+  const manual = (S.user.manual || {})[k];
+  const om = zar ? (S.official.matches || {})[f.j] : null;
+  const when = om && om.time ? dateTimeES(om.time) : '';
+  const canEdit = !(zar && officialFinal(f.j));
+  const res = f.hg != null ? (f.hg > f.ag ? 'h' : f.hg < f.ag ? 'a' : 'd') : '';
+  return `<div class="fx ${zar ? 'zar' : ''}" ${zar ? `data-zar="1" data-j="${f.j}"` : ''}>
+    <div class="fx-t h ${res === 'h' ? 'win' : ''}"><span>${esc(fxName(f.h))}</span>${crest(f.h)}</div>
+    <div class="fx-s">${f.hg != null ? `<b>${f.hg}<i>-</i>${f.ag}</b>${manual ? '<small title="Metido a mano">✏️ a mano</small>' : ''}` : `<span class="muted small">${when || '—'}</span>`}
+      ${canEdit ? `<button class="fx-edit" data-edit="${k}" title="${f.hg != null ? 'Corregir resultado' : 'Meter resultado'}">✏️</button>` : ''}</div>
+    <div class="fx-t a ${res === 'a' ? 'win' : ''}">${crest(f.a)}<span>${esc(fxName(f.a))}</span></div>
+  </div>`;
+}
+function editResult(k) {
+  const [h, a] = k.split('_'), f = fixtures().find(x => `${x.h}_${x.a}` === k);
+  const dlg = $('#dlg');
+  dlg.innerHTML = `<div class="dlg-body">
+    <div class="dlg-head"><h2 style="font-size:24px">Resultado · Jornada ${f.j}</h2><button class="x" onclick="this.closest('dialog').close()">✕</button></div>
+    <div class="edit-res">
+      <div>${crest(h, 'lg')}<span>${esc(team(h).short)}</span><input id="eh" type="number" min="0" inputmode="numeric" value="${f.hg ?? ''}"></div>
+      <b>-</b>
+      <div>${crest(a, 'lg')}<span>${esc(team(a).short)}</span><input id="ea" type="number" min="0" inputmode="numeric" value="${f.ag ?? ''}"></div>
+    </div>
+    <p class="muted small">Se guarda como resultado «a mano». Cuando Wikipedia publique el oficial, se sustituirá.</p>
+    <div class="row" style="justify-content:space-between;margin-top:12px">${(S.user.manual || {})[k] ? '<button class="btn danger" id="eDel">Quitar resultado</button>' : '<span></span>'}<button class="btn primary" id="eSave">Guardar</button></div>
+  </div>`;
+  dlg.showModal(); setTimeout(() => $('#eh').focus(), 50);
+  $('#eSave').onclick = () => {
+    const x = $('#eh').value, y = $('#ea').value; if (x === '' || y === '') { toast('Pon los dos marcadores'); return; }
+    S.user.results[k] = [+x, +y]; S.user.manual = { ...(S.user.manual || {}), [k]: true };
+    saveUser(); dlg.close(); renderAll(); toast(`${team(h).short} ${x}-${y} ${team(a).short} guardado ✓`);
+  };
+  if ($('#eDel')) $('#eDel').onclick = () => { delete S.user.results[k]; delete S.user.manual[k]; saveUser(); dlg.close(); renderAll(); toast('Resultado quitado'); };
+}
+
+/* ---------- ESTADÍSTICAS ---------- */
+function rEstadisticas() {
+  const c = C();
+  const st = standings(), ms = zarMatches(), n = lastRound();
+  const TS = teamStats();
+  const avgS = (k, side = 'z') => TS.length ? sum(TS, r => r[side][k]) / TS.filter(r => r[side][k] != null).length : null;
+  const passPct = side => { const a = sum(TS, r => r[side].accuratePass), t = sum(TS, r => r[side].totalPass); return t ? a / t * 100 : null; };
+  $('#view-estadisticas').innerHTML = `
+  <div class="section-title"><h2>Estadísticas</h2><small>Evolución del Zaragoza y números del equipo</small></div>
+  <div class="grid g2">
     <div class="card"><h3>Evolución en la tabla</h3><div class="sub">Puesto tras cada jornada</div><div class="chart-wrap"><canvas id="cPos"></canvas></div></div>
     <div class="card"><h3>Carrera por el ascenso</h3><div class="sub">Puntos acumulados de los 5 primeros</div><div class="chart-wrap"><canvas id="cRace"></canvas></div><div class="legend" id="lgRace"></div></div>
     <div class="card"><h3>Goles por jornada</h3><div class="sub">A favor (arriba) y en contra (abajo)</div><div class="chart-wrap short"><canvas id="cGoals"></canvas></div></div>
@@ -402,11 +472,7 @@ function rTemporada() {
     <div class="card"><h3>Posesión y precisión de pase</h3><div class="sub">Por jornada</div><div class="chart-wrap"><canvas id="cPoss"></canvas></div></div>
   </div>` : ''}
 
-  <div class="section-title"><h2>Partidos</h2><small>Toca un partido para ver la ficha</small></div>
-  <div class="legend" style="margin:-4px 2px 10px"><span>🏠 En casa</span><span>✈️ Fuera</span><span class="muted">El marcador va siempre con el equipo local delante</span></div>
-  <div class="matches">${ms.map(m => { const t = team(m.opp); return `<div class="match ${m.home ? 'home' : 'away'} ${m.res || official(m.j) ? 'clickable' : ''}" data-j="${m.j}"><div class="j">J${m.j}</div>${crest(m.opp)}<div class="opp"><b>${esc(t.name)}</b><div class="where">${venueIcon(m.home)}<span>${m.home ? 'Ibercaja Estadio' : esc(t.city) + ' · ' + esc(t.stadium)} · ${m.kickoff ? dateTimeES(m.kickoff) : dateES(m.date)}${official(m.j) ? ' · ✓' : S.user.actas[m.j] ? ' · 📝' : ''}</span></div></div>${m.res ? `<div class="score ${m.res}">${m.home ? m.gf + '-' + m.ga : m.ga + '-' + m.gf}</div>` : '<div class="score pend">—</div>'}</div>`; }).join('')}</div>
   ${footer()}`;
-  $$('#view-temporada .match.clickable').forEach(el => el.onclick = () => matchDialog(+el.dataset.j));
 
   const pos = positionsByRound();
   chart('cPos', { type: 'line', data: { labels: jLabels(pos.length), datasets: [{ data: pos, borderColor: c.zar, backgroundColor: c.zarFill, fill: 'start', borderWidth: 3, pointRadius: 4, pointBackgroundColor: pos.map(p => p === 1 ? '#22c58b' : p <= 5 ? '#5b8cff' : '#ff5a6a'), tension: .3 }] },
@@ -862,7 +928,9 @@ async function updateFromWikipedia({ silent = false } = {}) {
     const base = S.season.fixtures.find(f => `${f.h}_${f.a}` === k); if (!base) return;
     const zarGame = base.h === S.season.team || base.a === S.season.team;
     if (zarGame && (officialFinal(base.j) || (S.user.actas[base.j] && S.user.results[k]))) return; // manda la web oficial / tu acta
+    const wasManual = (S.user.manual || {})[k]; if (wasManual) delete S.user.manual[k];
     if (base.hg === v[0] && base.ag === v[1]) delete S.user.results[k]; else S.user.results[k] = v;
+    if (wasManual && before.get(k) === v[0] + '-' + v[1]) return; // ya lo tenías bien metido a mano
     if (before.get(k) !== v[0] + '-' + v[1]) fresh.push(`${team(base.h).short} ${v[0]}-${v[1]} ${team(base.a).short}`);
   });
   S.user.wikiAt = new Date().toISOString();
