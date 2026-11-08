@@ -370,4 +370,4 @@ table.rank .avatar{margin:0;border-width:2px}
 .edit-res>b{font-family:"Bebas Neue";font-size:30px;font-weight:400;padding-bottom:10px}
 @media(max-width:420px){.fx-t{font-size:12px;gap:6px}.fx-t .crest{width:20px;height:20px}.fx-s{min-width:62px}.section-title:has(.jsel){flex-wrap:wrap}}
 
-td.pts b{font-family:"Bebas Neue";font-weight:400;font-size:19px;letter-spacing:.5px}
+td.pts b{font-weight:800}
