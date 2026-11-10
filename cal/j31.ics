@@ -1,0 +1,23 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Nobleza y valor//Real Zaragoza 26-27//ES
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Real Zaragoza · J31
+X-WR-TIMEZONE:Europe/Madrid
+REFRESH-INTERVAL;VALUE=DURATION:PT6H
+X-PUBLISHED-TTL:PT6H
+BEGIN:VEVENT
+UID:nyv-liga-2627-j31@nobleza-y-valor
+DTSTAMP:20261110T101343Z
+DTSTART;VALUE=DATE:20270404
+DTEND;VALUE=DATE:20270405
+SUMMARY:⚽ Real Zaragoza - Gimnàstic de Tarragona (horario por confirmar
+ )
+LOCATION:Ibercaja Estadio\, Zaragoza
+DESCRIPTION:1ª Federación · Grupo 2 · Jornada 31\nHorario por confirma
+ r: la RFEF lo fija con 2-3 semanas de antelación. Si estás suscrito\, s
+ e actualiza solo.\nhttps://fjaenj.github.io/real-zaragoza-stats/
+URL:https://fjaenj.github.io/real-zaragoza-stats/
+END:VEVENT
+END:VCALENDAR

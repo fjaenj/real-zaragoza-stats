@@ -24,7 +24,15 @@ function lsGet(k, def) { try { const v = localStorage.getItem(k); return v ? JSO
 function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { } }
 function initials(name) { return String(name).split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase(); }
 function dateES(iso) { if (!iso) return ''; const [y, m, d] = iso.slice(0, 10).split('-'); return `${d}/${m}/${y.slice(2)}`; }
-function dateTimeES(iso) { try { return new Date(iso).toLocaleString('es-ES', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }); } catch { return iso; } }
+function dateTimeES(iso) { try { return new Date(iso).toLocaleString('es-ES', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Madrid' }); } catch { return iso; } }
+// «sáb 14 · 21:00» (hora de España) para las filas de la jornada
+function kickShort(iso) {
+  try {
+    const d = new Date(iso), o = { timeZone: 'Europe/Madrid' };
+    const wd = d.toLocaleDateString('es-ES', { ...o, weekday: 'short' }).replace('.', '');
+    return `${wd} ${d.toLocaleDateString('es-ES', { ...o, day: 'numeric' })} · ${d.toLocaleTimeString('es-ES', { ...o, hour: '2-digit', minute: '2-digit' })}`;
+  } catch { return ''; }
+}
 const sum = (a, f) => a.reduce((s, x) => s + (f(x) || 0), 0);
 
 /* ---------- tema ---------- */
@@ -56,6 +64,7 @@ async function boot() {
   matchMedia('(prefers-color-scheme: light)').addEventListener('change', () => { if (themePref() === 'auto') { applyTheme(); renderAll(); } });
   [S.season, S.history, S.squad] = await Promise.all([loadJSON('data/season.json'), loadJSON('data/history.json'), loadJSON('data/squad.json')]);
   S.official = (await loadJSON('data/official.json', true)) || { matches: {} };
+  S.schedule = (await loadJSON('data/schedule.json', true)) || { rfef: {} };
   const remote = await loadJSON('data/user.json', true);
   S.user = migrateUser(pickNewer(remote, lsGet(LS_USER, null)) || emptyUser());
   S.cfg = lsGet(LS_CFG, {});
@@ -131,6 +140,18 @@ function fixtures() {
     return r;
   });
 }
+// Hora de inicio: la del club (realzaragoza.com) para el Zaragoza y, para el resto, el cartel de la RFEF
+function zarCal(j) { return (S.official.calendar || []).find(m => m.comp === 'liga' && m.j === j) || null; }
+function kickoffOf(f) {
+  const me = S.season.team;
+  if (f.h === me || f.a === me) {
+    const c = zarCal(f.j); if (c && c.time) return c.time;
+    const om = S.official.matches && S.official.matches[f.j]; if (om && om.time) return om.time;
+  }
+  const rows = (((S.schedule || {}).rfef || {})[f.j] || {}).rows || [];
+  const r = rows.find(x => x.h === f.h && x.a === f.a);
+  return r ? r.utc : null;
+}
 function zarMatches() {
   const me = S.season.team;
   return fixtures().filter(f => f.h === me || f.a === me).sort((a, b) => a.j - b.j).map(f => {
@@ -138,7 +159,7 @@ function zarMatches() {
     const gf = played ? (home ? f.hg : f.ag) : null, ga = played ? (home ? f.ag : f.hg) : null;
     const res = !played ? null : gf > ga ? 'W' : gf === ga ? 'D' : 'L';
     const om = S.official.matches && S.official.matches[f.j];
-    return { ...f, home, opp: home ? f.a : f.h, gf, ga, res, pts: res === 'W' ? 3 : res === 'D' ? 1 : res === 'L' ? 0 : null, kickoff: om && om.time, venue: om && om.venue };
+    return { ...f, home, opp: home ? f.a : f.h, gf, ga, res, pts: res === 'W' ? 3 : res === 'D' ? 1 : res === 'L' ? 0 : null, kickoff: kickoffOf(f), venue: (om && om.venue) || (zarCal(f.j) || {}).venue };
   });
 }
 function standings(uptoJ = 99) {
@@ -306,13 +327,14 @@ function rInicio() {
   <div class="grid g2" style="margin-top:14px">
     <div class="card">
       <h3>Próximo partido</h3>
-      ${next ? `<div class="sub">Jornada ${next.j} · ${next.kickoff ? dateTimeES(next.kickoff) : dateES(next.date) + ' (fecha de jornada)'} · ${next.home ? '🏠 Ibercaja Estadio' : '✈️ ' + esc(team(next.opp).city) + ' · ' + esc(team(next.opp).stadium)}</div>
+      ${next ? `<div class="sub">Jornada ${next.j} · ${next.kickoff ? dateTimeES(next.kickoff) : dateES((zarCal(next.j) || {}).date || next.date) + ' · hora por confirmar'} · ${next.home ? '🏠 Ibercaja Estadio' : '✈️ ' + esc(team(next.opp).city) + ' · ' + esc(team(next.opp).stadium)}</div>
       <div class="next">
         <div class="team">${badge(next.home ? 'ZAR' : next.opp)}${esc(next.home ? 'Real Zaragoza' : team(next.opp).name)}</div>
         <div class="vs">VS</div>
         <div class="team">${badge(next.home ? next.opp : 'ZAR')}${esc(next.home ? team(next.opp).name : 'Real Zaragoza')}</div>
       </div>
-      <div class="row" style="justify-content:center;margin-top:12px">${oppInfo(next.opp)}</div>` : '<p class="muted">Temporada terminada</p>'}
+      <div class="row" style="justify-content:center;margin-top:12px">${oppInfo(next.opp)}</div>
+      <div style="text-align:center;margin-top:12px"><button class="btn" data-cal="${next.j}">📅 Añadir al calendario</button></div>` : '<p class="muted">Temporada terminada</p>'}
     </div>
     <div class="card link" id="cardMicro" title="Ver todos los microobjetivos">
       <h3>Microobjetivo actual <span class="go">›</span></h3>
@@ -342,6 +364,7 @@ function rInicio() {
 
   $$('#view-inicio .spot').forEach(el => el.onclick = () => rankingDialog(el.dataset.rank));
   $('#cardMicro').onclick = () => go('micro');
+  $$('#view-inicio [data-cal]').forEach(b => b.onclick = () => calDialog(+b.dataset.cal));
   const cum = zarCumulative(), N = Math.max(cum.length + 4, 14);
   const avg = Array.from({ length: N }, (_, i) => +(champs.reduce((s, x) => s + x.curve[i], 0) / champs.length).toFixed(2));
   chart('cHomeRace', {
@@ -394,35 +417,85 @@ function rTemporada() {
       <button class="btn" id="jNext" ${J >= 38 ? 'disabled' : ''} aria-label="Jornada siguiente">›</button></div></div>
   <div class="card">
     <div class="sub">${nPlayed}/${fx.length} partidos con resultado · fecha de la jornada: ${dateES(dates[J])}</div>
+    ${horariosNote(J, fx)}
     <div class="fixtures">${fx.map(f => fixtureRow(f)).join('')}</div>
     <p class="muted small" style="margin-top:10px">Los resultados llegan solos (Wikipedia y, el del Zaragoza, la web oficial). Si aún no aparece alguno, toca ✏️ para meterlo a mano: cuando se publique, se queda el oficial.</p>
   </div>
 
-  <div class="section-title"><h2>Partidos del Zaragoza</h2><small>Toca un partido para ver la ficha</small></div>
-  <div class="legend" style="margin:-4px 2px 10px"><span>🏠 En casa</span><span>✈️ Fuera</span><span class="muted">El marcador va siempre con el equipo local delante</span></div>
-  <div class="matches">${ms.map(m => { const t = team(m.opp); return `<div class="match ${m.home ? 'home' : 'away'} ${m.res || official(m.j) ? 'clickable' : ''}" data-j="${m.j}"><div class="j">J${m.j}</div>${crest(m.opp)}<div class="opp"><b>${esc(t.name)}</b><div class="where">${venueIcon(m.home)}<span>${m.home ? 'Ibercaja Estadio' : esc(t.city) + ' · ' + esc(t.stadium)} · ${m.kickoff ? dateTimeES(m.kickoff) : dateES(m.date)}${official(m.j) ? ' · ✓' : S.user.actas[m.j] ? ' · 📝' : ''}</span></div></div>${m.res ? `<div class="score ${m.res}">${m.home ? m.gf + '-' + m.ga : m.ga + '-' + m.gf}</div>` : '<div class="score pend">—</div>'}</div>`; }).join('')}</div>
+  <div class="section-title"><h2>Partidos del Zaragoza</h2><button class="btn cal-sub" id="calSub">📅 Suscribirme al calendario</button></div>
+  <div class="legend" style="margin:-4px 2px 10px"><span>🏠 En casa</span><span>✈️ Fuera</span><span>📅 Añadir al calendario</span><span class="muted">El marcador va siempre con el equipo local delante · toca un partido jugado para ver la ficha</span></div>
+  <div class="matches">${ms.map(m => { const t = team(m.opp); return `<div class="match ${m.home ? 'home' : 'away'} ${m.res || official(m.j) ? 'clickable' : ''}" data-j="${m.j}"><div class="j">J${m.j}</div>${crest(m.opp)}<div class="opp"><b>${esc(t.name)}</b><div class="where">${venueIcon(m.home)}<span>${m.home ? 'Ibercaja Estadio' : esc(t.city) + ' · ' + esc(t.stadium)} · ${m.kickoff ? dateTimeES(m.kickoff) : dateES((zarCal(m.j) || {}).date || m.date) + (m.res ? '' : ' · hora por confirmar')}${official(m.j) ? ' · ✓' : S.user.actas[m.j] ? ' · 📝' : ''}</span></div></div>${m.res ? `<div class="score ${m.res}">${m.home ? m.gf + '-' + m.ga : m.ga + '-' + m.gf}</div>` : `<button class="cal-btn ${m.kickoff ? 'set' : ''}" data-cal="${m.j}" title="Añadir al calendario" aria-label="Añadir la jornada ${m.j} al calendario">📅</button>`}</div>`; }).join('')}</div>
   ${footer()}`;
   $$('#view-temporada .match.clickable').forEach(el => el.onclick = () => matchDialog(+el.dataset.j));
+  $$('#view-temporada [data-cal]').forEach(b => b.onclick = e => { e.stopPropagation(); calDialog(+b.dataset.cal); });
+  $('#calSub').onclick = () => calDialog(null);
   $('#jSel').onchange = e => { S.jornada = +e.target.value; rTemporada(); $('#jSel').scrollIntoView({ block: 'center' }); };
   $('#jPrev').onclick = () => { S.jornada = Math.max(1, J - 1); rTemporada(); $('#jSel').scrollIntoView({ block: 'center' }); };
   $('#jNext').onclick = () => { S.jornada = Math.min(38, J + 1); rTemporada(); $('#jSel').scrollIntoView({ block: 'center' }); };
   $$('#view-temporada .fx[data-zar]').forEach(el => el.onclick = e => { if (!e.target.closest('button,input')) matchDialog(+el.dataset.j); });
   $$('#view-temporada [data-edit]').forEach(b => b.onclick = e => { e.stopPropagation(); editResult(b.dataset.edit); });
 }
+function horariosNote(J, fx) {
+  if (fx.every(f => f.hg != null)) return '';
+  const last = Math.max(...fx.map(f => new Date((kickoffOf(f) || f.date + 'T23:00:00Z')).getTime()));
+  const sch = ((S.schedule || {}).rfef || {})[J];
+  if (sch && sch.rows && sch.rows.length) return `<div class="hnote ok">🕒 Horarios oficiales de la RFEF${sch.rows.length < fx.length ? ` (${sch.rows.length} de ${fx.length})` : ''} · <a href="${esc(sch.news)}" target="_blank" rel="noopener">ver cartel</a> · hora de España</div>`;
+  if (last < Date.now() - 2 * 864e5) return '';
+  const anyKo = fx.some(f => kickoffOf(f));
+  return `<div class="hnote">🕒 ${anyKo ? 'Solo está la hora del Zaragoza. ' : ''}La RFEF publica los horarios con 2-3 semanas de antelación: aparecerán aquí solos.</div>`;
+}
 const fxName = code => code === 'ZAR' ? 'Zaragoza' : team(code).short;
 function fixtureRow(f) {
   const k = `${f.h}_${f.a}`, me = S.season.team, zar = f.h === me || f.a === me;
   const manual = (S.user.manual || {})[k];
-  const om = zar ? (S.official.matches || {})[f.j] : null;
-  const when = om && om.time ? dateTimeES(om.time) : '';
+  const ko = kickoffOf(f), when = ko ? kickShort(ko) : '';
   const canEdit = !(zar && officialFinal(f.j));
   const res = f.hg != null ? (f.hg > f.ag ? 'h' : f.hg < f.ag ? 'a' : 'd') : '';
   return `<div class="fx ${zar ? 'zar' : ''}" ${zar ? `data-zar="1" data-j="${f.j}"` : ''}>
     <div class="fx-t h ${res === 'h' ? 'win' : ''}"><span>${esc(fxName(f.h))}</span>${crest(f.h)}</div>
-    <div class="fx-s">${f.hg != null ? `<b>${f.hg}<i>-</i>${f.ag}</b>${manual ? '<small title="Metido a mano">✏️ a mano</small>' : ''}` : `<span class="muted small">${when || '—'}</span>`}
+    <div class="fx-s">${f.hg != null ? `<b>${f.hg}<i>-</i>${f.ag}</b>${manual ? '<small title="Metido a mano">✏️ a mano</small>' : ''}` : (when ? `<span class="fx-when">${when}</span>` : '<span class="muted small">—</span>')}
       ${canEdit ? `<button class="fx-edit" data-edit="${k}" title="${f.hg != null ? 'Corregir resultado' : 'Meter resultado'}">✏️</button>` : ''}</div>
     <div class="fx-t a ${res === 'a' ? 'win' : ''}">${crest(f.a)}<span>${esc(fxName(f.a))}</span></div>
   </div>`;
+}
+/* ---------- calendario ---------- */
+const calURL = path => new URL(path, location.href).href;
+const icsStamp = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+function calDialog(j) {
+  const subHttps = calURL('cal/zaragoza.ics'), subWebcal = subHttps.replace(/^https?:/, 'webcal:');
+  const gSub = 'https://calendar.google.com/calendar/r?cid=' + encodeURIComponent(subWebcal);
+  const subBlock = `<div class="cal-sub-box">
+      <h3>🔄 Suscribirme a todos los partidos</h3>
+      <p class="muted small">Un calendario con los 38 partidos de liga (y la Copa). Cuando la RFEF fija un horario, tu calendario lo cambia solo, sin hacer nada.</p>
+      <div class="cal-actions">
+        <a class="btn primary" href="${esc(subWebcal)}">iPhone · Mac · Outlook</a>
+        <a class="btn" href="${esc(gSub)}" target="_blank" rel="noopener">Google Calendar</a>
+      </div>
+      <p class="muted small">Si el enlace no abre tu calendario, copia esta dirección y añádela como «calendario suscrito»:</p>
+      <div class="cal-url"><input readonly value="${esc(subHttps)}" id="calUrl"><button class="btn" id="calCopy">Copiar</button></div>
+    </div>`;
+  let head = '', single = '';
+  if (j != null) {
+    const m = zarMatches().find(x => x.j === j); const t = team(m.opp), c = zarCal(j) || {};
+    const hn = m.home ? 'Real Zaragoza' : t.name, an = m.home ? t.name : 'Real Zaragoza';
+    const loc = [c.venue || (m.home ? 'Ibercaja Estadio' : t.stadium), m.home ? 'Zaragoza' : t.city].filter(Boolean).join(', ');
+    const title = `⚽ ${hn} - ${an}`, details = `1ª Federación · Grupo 2 · Jornada ${j}\n${calURL('./')}`;
+    let dates;
+    if (m.kickoff) { const st = new Date(m.kickoff); dates = icsStamp(st) + '/' + icsStamp(new Date(st.getTime() + 2 * 3600e3)); }
+    else { const d = new Date((c.date || m.date) + 'T12:00:00Z'), e = new Date(d.getTime() + 864e5); dates = d.toISOString().slice(0, 10).replace(/-/g, '') + '/' + e.toISOString().slice(0, 10).replace(/-/g, ''); }
+    const gUrl = 'https://calendar.google.com/calendar/render?' + new URLSearchParams({ action: 'TEMPLATE', text: m.kickoff ? title : title + ' (horario por confirmar)', dates, location: loc, details, ctz: 'Europe/Madrid' });
+    head = `<div class="muted small">Jornada ${j}</div><h2 style="font-size:24px">${esc(hn)} – ${esc(an)}</h2>
+      <p class="cal-when">${m.kickoff ? `🕒 <b>${esc(dateTimeES(m.kickoff))}</b> (hora de España)` : `🕒 <b>${esc(dateES(c.date || m.date))}</b> · horario por confirmar`}<br>📍 ${esc(loc)}</p>`;
+    single = `<div class="cal-actions">
+        <a class="btn primary" href="${esc(gUrl)}" target="_blank" rel="noopener">Google Calendar</a>
+        <a class="btn" href="${esc(calURL(`cal/j${String(j).padStart(2, '0')}.ics`))}" target="_blank" rel="noopener">iPhone · Outlook (.ics)</a>
+      </div>
+      ${m.kickoff ? '' : '<p class="muted small">Aún no hay hora: se añadirá como evento de todo el día. Si te suscribes al calendario de abajo, la hora aparecerá sola en cuanto se publique.</p>'}`;
+  } else head = '<h2 style="font-size:24px">Calendario del Zaragoza</h2>';
+  const dlg = $('#dlg');
+  dlg.innerHTML = `<div class="dlg-body"><div class="dlg-head"><div>${head}</div><button class="x" onclick="this.closest('dialog').close()">✕</button></div>${single}${subBlock}</div>`;
+  dlg.showModal();
+  $('#calCopy').onclick = async () => { try { await navigator.clipboard.writeText(subHttps); toast('Dirección copiada'); } catch { $('#calUrl').select(); } };
 }
 function editResult(k) {
   const [h, a] = k.split('_'), f = fixtures().find(x => `${x.h}_${x.a}` === k);
@@ -944,7 +1017,12 @@ async function updateAll() {
   const b = $('#btnUpdate'); b.classList.add('loading'); b.disabled = true;
   const msgs = [];
   try {
-    const [remote, off] = await Promise.all([loadJSON('data/user.json?t=' + Date.now(), true), loadJSON('data/official.json?t=' + Date.now(), true)]);
+    const [remote, off, sch] = await Promise.all([loadJSON('data/user.json?t=' + Date.now(), true), loadJSON('data/official.json?t=' + Date.now(), true), loadJSON('data/schedule.json?t=' + Date.now(), true)]);
+    if (sch && (sch.updated || '') > ((S.schedule || {}).updated || '')) {
+      const cnt = o => Object.values((o && o.rfef) || {}).reduce((n, x) => n + ((x.rows || []).length), 0);
+      const nNew = cnt(sch) - cnt(S.schedule); S.schedule = sch;
+      if (nNew > 0) msgs.push(`${nNew} horario${nNew > 1 ? 's' : ''} nuevo${nNew > 1 ? 's' : ''}`);
+    }
     if (remote && new Date(remote.updatedAt || 0) > new Date(S.user.updatedAt || 0)) { S.user = migrateUser(remote); lsSet(LS_USER, S.user); }
     if (off && (off.updated || '') > (S.official.updated || '')) {
       const before = Object.values(S.official.matches || {}).filter(m => m.finished).length;
