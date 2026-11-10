@@ -1,0 +1,24 @@
+name: ocr-test
+on:
+  push:
+    branches: [ocr-test]
+permissions:
+  contents: write
+jobs:
+  img:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p tmpimg
+          UA='Mozilla/5.0 (compatible; NoblezaYValor/1.0; app personal de estadisticas)'
+          for j in 2 5 8 10 11 12; do
+            html=$(curl -sSL -A "$UA" "https://rfef.es/es/noticias/horarios-y-televisiones-de-la-jornada-$j-de-primera-federacion-temporada-202627" || true)
+            src=$(echo "$html" | grep -oiE 'src="[^"]*g2[^"]*\.png[^"]*"' | head -1 | sed 's/src="//;s/"$//')
+            echo "J$j -> $src"
+            [ -n "$src" ] && curl -sSL -A "$UA" -o tmpimg/j$j.png "https://rfef.es${src}"
+            sleep 2
+          done
+          ls -la tmpimg; which tesseract convert magick || true
+          git config user.name "nobleza-y-valor-bot"; git config user.email "actions@users.noreply.github.com"
+          git add tmpimg; git commit -m "imagenes ocr" && git push
