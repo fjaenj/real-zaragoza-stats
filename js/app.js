@@ -471,7 +471,7 @@ function calDialog(j) {
         <a class="btn primary" href="${esc(subWebcal)}">iPhone · Mac · Outlook</a>
         <a class="btn" href="${esc(gSub)}" target="_blank" rel="noopener">Google Calendar</a>
       </div>
-      <p class="muted small">Si el enlace no abre tu calendario, copia esta dirección y añádela como «calendario suscrito»:</p>
+      <p class="muted small"><b>Google Calendar</b> tarda un rato (a veces unas horas) en cargar los partidos la primera vez y después los revisa más o menos una vez al día. En Android, activa «Sincronizar» para este calendario en los ajustes de la app. Si no aparece nada, añádelo desde el ordenador: calendar.google.com ▸ Otros calendarios ▸ + ▸ Desde URL, con esta dirección:</p>
       <div class="cal-url"><input readonly value="${esc(subHttps)}" id="calUrl"><button class="btn" id="calCopy">Copiar</button></div>
     </div>`;
   let head = '', single = '';
