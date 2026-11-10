@@ -422,7 +422,7 @@ function rTemporada() {
     <p class="muted small" style="margin-top:10px">Los resultados llegan solos (Wikipedia y, el del Zaragoza, la web oficial). Si aún no aparece alguno, toca ✏️ para meterlo a mano: cuando se publique, se queda el oficial.</p>
   </div>
 
-  <div class="section-title"><h2>Partidos del Zaragoza</h2><button class="btn cal-sub" id="calSub">📅 Suscribirme al calendario</button></div>
+  <div class="section-title"><h2>Partidos del Zaragoza</h2><button class="btn cal-sub" id="calSub">📅 Calendario del Zaragoza</button></div>
   <div class="legend" style="margin:-4px 2px 10px"><span>🏠 En casa</span><span>✈️ Fuera</span><span>📅 Añadir al calendario</span><span class="muted">El marcador va siempre con el equipo local delante · toca un partido jugado para ver la ficha</span></div>
   <div class="matches">${ms.map(m => { const t = team(m.opp); return `<div class="match ${m.home ? 'home' : 'away'} ${m.res || official(m.j) ? 'clickable' : ''}" data-j="${m.j}"><div class="j">J${m.j}</div>${crest(m.opp)}<div class="opp"><b>${esc(t.name)}</b><div class="where">${venueIcon(m.home)}<span>${m.home ? 'Ibercaja Estadio' : esc(t.city) + ' · ' + esc(t.stadium)} · ${m.kickoff ? dateTimeES(m.kickoff) : dateES((zarCal(m.j) || {}).date || m.date) + (m.res ? '' : ' · hora por confirmar')}${official(m.j) ? ' · ✓' : S.user.actas[m.j] ? ' · 📝' : ''}</span></div></div>${m.res ? `<div class="score ${m.res}">${m.home ? m.gf + '-' + m.ga : m.ga + '-' + m.gf}</div>` : `<button class="cal-btn ${m.kickoff ? 'set' : ''}" data-cal="${m.j}" title="Añadir al calendario" aria-label="Añadir la jornada ${m.j} al calendario">📅</button>`}</div>`; }).join('')}</div>
   ${footer()}`;
@@ -465,8 +465,8 @@ function calDialog(j) {
   const subHttps = calURL('cal/zaragoza.ics'), subWebcal = subHttps.replace(/^https?:/, 'webcal:');
   const gSub = 'https://calendar.google.com/calendar/r?cid=' + encodeURIComponent(subWebcal);
   const subBlock = `<div class="cal-sub-box">
-      <h3>🔄 Suscribirme a todos los partidos</h3>
-      <p class="muted small">Un calendario con los 38 partidos de liga (y la Copa). Cuando la RFEF fija un horario, tu calendario lo cambia solo, sin hacer nada.</p>
+      <h3>🔄 Suscribirme a los partidos del Zaragoza</h3>
+      <p class="muted small">Solo los partidos del Real Zaragoza: los 38 de liga y los de Copa. No incluye los del resto del grupo. Cuando la RFEF fija un horario, tu calendario lo cambia solo, sin hacer nada.</p>
       <div class="cal-actions">
         <a class="btn primary" href="${esc(subWebcal)}">iPhone · Mac · Outlook</a>
         <a class="btn" href="${esc(gSub)}" target="_blank" rel="noopener">Google Calendar</a>
