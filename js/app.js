@@ -463,15 +463,15 @@ const calURL = path => new URL(path, location.href).href;
 const icsStamp = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
 function calDialog(j) {
   const subHttps = calURL('cal/zaragoza.ics'), subWebcal = subHttps.replace(/^https?:/, 'webcal:');
-  const gSub = 'https://calendar.google.com/calendar/r?cid=' + encodeURIComponent(subWebcal);
+  const gSub = 'https://calendar.google.com/calendar/u/0/r/settings/addbyurl';
   const subBlock = `<div class="cal-sub-box">
       <h3>🔄 Suscribirme a los partidos del Zaragoza</h3>
       <p class="muted small">Solo los partidos del Real Zaragoza: los 38 de liga y los de Copa. No incluye los del resto del grupo. Cuando la RFEF fija un horario, tu calendario lo cambia solo, sin hacer nada.</p>
       <div class="cal-actions">
         <a class="btn primary" href="${esc(subWebcal)}">iPhone · Mac · Outlook</a>
-        <a class="btn" href="${esc(gSub)}" target="_blank" rel="noopener">Google Calendar</a>
+        <a class="btn" id="gSub" href="${esc(gSub)}" target="_blank" rel="noopener">Google Calendar</a>
       </div>
-      <p class="muted small"><b>Google Calendar</b> tarda un rato (a veces unas horas) en cargar los partidos la primera vez y después los revisa más o menos una vez al día. En Android, activa «Sincronizar» para este calendario en los ajustes de la app. Si no aparece nada, añádelo desde el ordenador: calendar.google.com ▸ Otros calendarios ▸ + ▸ Desde URL, con esta dirección:</p>
+      <p class="muted small"><b>Google Calendar:</b> el botón copia la dirección y abre «Desde URL»; solo tienes que pegarla y darle a «Añadir calendario». Google revisa el calendario más o menos una vez al día, así que los cambios de hora pueden tardar unas horas en verse. En Android, activa «Sincronizar» para este calendario en los ajustes de la app.</p>
       <div class="cal-url"><input readonly value="${esc(subHttps)}" id="calUrl"><button class="btn" id="calCopy">Copiar</button></div>
     </div>`;
   let head = '', single = '';
@@ -495,6 +495,7 @@ function calDialog(j) {
   const dlg = $('#dlg');
   dlg.innerHTML = `<div class="dlg-body"><div class="dlg-head"><div>${head}</div><button class="x" onclick="this.closest('dialog').close()">✕</button></div>${single}${subBlock}</div>`;
   dlg.showModal();
+  $('#gSub').addEventListener('click', () => { try { navigator.clipboard.writeText(subHttps); toast('Dirección copiada: pégala en «URL del calendario»', 4000); } catch { } });
   $('#calCopy').onclick = async () => { try { await navigator.clipboard.writeText(subHttps); toast('Dirección copiada'); } catch { $('#calUrl').select(); } };
 }
 function editResult(k) {
