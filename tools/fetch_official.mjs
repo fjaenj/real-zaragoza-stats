@@ -38,6 +38,36 @@ const dueJ = Object.keys(idx.league).map(Number).filter(j => {
 }).sort((a, b) => a - b);
 
 let changed = 0;
+
+// Calendario completo del Zaragoza (liga y copa): fecha, hora cuando la fijan y estadio.
+// Una sola petición a la página pública /partidos.
+try {
+  const nd = await getNextData('https://www.realzaragoza.com/partidos');
+  const findList = o => {
+    if (Array.isArray(o) && o.length > 5 && o[0] && typeof o[0] === 'object' && 'gameweek' in o[0] && 'homeTeam' in o[0]) return o;
+    if (o && typeof o === 'object') for (const k of Object.keys(o)) { const r = findList(o[k]); if (r) return r; }
+    return null;
+  };
+  const list = findList(nd.props.pageProps) || [];
+  const cal = list.map(m => ({
+    comp: m.competition && m.competition.main ? 'liga' : ((m.competition && m.competition.name) || 'otra'),
+    j: m.gameweek && m.gameweek.week != null ? m.gameweek.week : null,
+    round: (m.gameweek && m.gameweek.name) || null,
+    date: m.date || null,
+    time: m.time || null,
+    venue: (m.venue && m.venue.name) || m.venueName || null,
+    home: m.homeTeam && (m.homeTeam.shortName || m.homeTeam.name),
+    away: m.awayTeam && (m.awayTeam.shortName || m.awayTeam.name),
+    homeZar: /zaragoza/i.test((m.homeTeam && (m.homeTeam.shortName || m.homeTeam.name)) || ''),
+    slug: m.slug || null,
+  })).filter(m => m.date);
+  if (cal.length && JSON.stringify(cal) !== JSON.stringify(off.calendar || null)) {
+    off.calendar = cal; changed++;
+    console.log(`Calendario: ${cal.length} partidos, ${cal.filter(m => m.time).length} con hora`);
+  } else console.log('Calendario: sin cambios');
+} catch (e) { console.error('Calendario: ' + e.message); }
+await sleep(2500);
+
 for (const j of dueJ) {
   const url = idx.base + idx.league[j];
   try {
