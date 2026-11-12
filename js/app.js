@@ -699,7 +699,7 @@ function microTotal(B = microBlocks()) { return sum(B, b => b.target); }
 function microTarget(j, B = microBlocks()) { let t = 0; B.forEach(b => { const k = Math.max(0, Math.min(j, b.to) - b.from + 1); if (k > 0) t += b.target * (k / b.size); }); return +t.toFixed(2); }
 function blockCard(b) {
   const pct = Math.min(100, b.pts / (b.size * 3) * 100), tg = b.target / (b.size * 3) * 100;
-  const label = b.status === 'ok' ? '✅ Cumplido' : b.status === 'ko' ? '❌ No cumplido' : b.status === 'live' ? (b.need ? `⏳ En juego · faltan ${b.need} pts` : `✅ Objetivo ya alcanzado · ${b.size - b.played} partido${b.size - b.played > 1 ? 's' : ''} por jugar`) : 'Pendiente';
+  const label = b.status === 'ok' ? '✅ Cumplido' : b.status === 'ko' ? '❌ No cumplido' : b.status === 'live' ? (b.need ? `⏳ En juego · ${b.need === 1 ? 'falta 1 punto' : `faltan ${b.need} puntos`}` : `✅ Objetivo ya alcanzado · ${b.size - b.played} partido${b.size - b.played > 1 ? 's' : ''} por jugar`) : 'Pendiente';
   return `<div class="bh"><h3>${esc(b.label)} <small class="muted" style="font-family:Inter;font-size:12px">J${b.from}-J${b.to}</small></h3><div class="pts">${b.pts}<small>/${b.target}</small></div></div>
   <div class="bar"><i style="width:${pct}%"></i><span class="tgt" style="left:${tg}%"></span></div>
   <div class="row" style="justify-content:space-between;margin-top:8px"><span class="small">${label}</span><span class="small muted">${b.pts - b.target >= 0 && b.played === b.size ? '+' + (b.pts - b.target) + ' de superávit' : ''}</span></div>
@@ -713,7 +713,7 @@ function rMicro() {
   const sup = pts - target(n), TOT = microTotal(B);
   $('#view-micro').innerHTML = `
   <div class="section-title"><h2>Microobjetivos de Ibai</h2><small>9 bloques de 4 + bloque final de 2</small></div>
-  <div class="note">El plan de Ibai Gómez: <b>bloques de cuatro jornadas desde la J1</b>, con el objetivo de sumar <b>7 puntos de cada 12</b> en cada uno de los nueve bloques (J1-J36), y un <b>bloque final</b> con las dos últimas jornadas (J37-J38), con <b>${(B[B.length - 1] || {}).target} de 6</b>. Si se cumple todo, son <b>${TOT} puntos</b>: según Ibai, «prácticamente, campeones de liga».</div>
+  <div class="note">El plan de Ibai Gómez: <b>bloques de cuatro jornadas desde la J1</b>, con el objetivo de sumar <b>${S.season.micro.target} puntos de cada 12</b> en cada uno de los nueve bloques (J1-J36), y un <b>bloque final</b> con las dos últimas jornadas (J37-J38), con <b>${(B[B.length - 1] || {}).target} de 6</b>. Si se cumple todo, son <b>${TOT} puntos</b>: según Ibai, «prácticamente, campeones de liga».</div>
   <div class="grid g4" style="margin-top:14px">
     <div class="card kpi"><span class="k">Superávit acumulado</span><span class="v ${sup >= 0 ? 'up' : 'down'}">${sup >= 0 ? '+' : ''}${fmt(sup, 1)}</span><span class="d">${pts} pts frente a ${fmt(target(n), 1)} del plan (J${n})</span></div>
     <div class="card kpi"><span class="k">Bloques cumplidos</span><span class="v">${ok}/${done.length}</span><span class="d">de los cerrados</span></div>
@@ -722,7 +722,7 @@ function rMicro() {
   </div>
   <div class="card" style="margin-top:14px"><h3>Plan vs realidad</h3><div class="sub">Puntos acumulados del Zaragoza frente al objetivo de cada bloque</div>
     <div class="chart-wrap"><canvas id="cMicro"></canvas></div>
-    <div class="legend"><span><i style="background:${c.zar}"></i>Zaragoza</span><span><i style="background:#5b8cff"></i>Plan (7 cada 4)</span><span><i style="background:#22c58b"></i>Superávit por bloque</span></div></div>
+    <div class="legend"><span><i style="background:${c.zar}"></i>Zaragoza</span><span><i style="background:#5b8cff"></i>Plan (${S.season.micro.target} cada 4)</span><span><i style="background:#22c58b"></i>Superávit por bloque</span></div></div>
   <div class="blocks" style="margin-top:14px">${B.map(b => `<div class="block ${b.status === 'ok' ? 'ok' : b.status === 'ko' ? 'ko' : b.status === 'live' ? 'live' : ''}">${blockCard(b)}</div>`).join('')}</div>
   ${footer()}`;
   chart('cMicro', { data: { labels: jLabels(38), datasets: [
