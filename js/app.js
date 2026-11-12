@@ -677,9 +677,10 @@ function rCampeones() {
 
 /* ---------- MICROOBJETIVOS ---------- */
 function microBlocks() {
-  // Ibai: «Hay que separar los dos primeros partidos y, luego, hacer nueve bloques de cuatro jornadas»
+  // Ibai: bloques de cuatro jornadas desde el inicio y un último bloque con las dos jornadas finales
   const M = S.season.micro, ms = zarMatches(), blocks = [];
-  const plan = [{ size: M.first.size, target: M.first.target, label: M.first.label }].concat(Array.from({ length: M.blocks }, () => ({ size: M.size, target: M.target })));
+  const plan = (M.first ? [M.first] : []).concat(Array.from({ length: M.blocks }, () => ({ size: M.size, target: M.target })), M.last ? [M.last] : []);
+  let nb = 0;
   let j = 1;
   plan.forEach((pl, i) => {
     const { size, target } = pl;
@@ -687,12 +688,14 @@ function microBlocks() {
     const played = games.filter(m => m.res), pts = sum(played, m => m.pts);
     const maxPossible = pts + (games.length - played.length) * 3;
     const status = played.length === games.length ? (pts >= target ? 'ok' : 'ko') : played.length ? 'live' : (maxPossible < target ? 'ko' : 'pending');
-    blocks.push({ i, label: pl.label || `Bloque ${i}`, from: j, to: j + size - 1, size, target, games, played: played.length, pts, status, need: Math.max(0, target - pts) });
+    if (!pl.label) nb++;
+    blocks.push({ i, label: pl.label || `Bloque ${nb}`, from: j, to: j + size - 1, size, target, games, played: played.length, pts, status, need: Math.max(0, target - pts) });
     j += size;
   });
   if (!blocks.some(b => b.status === 'live')) { const nx = blocks.find(b => b.status === 'pending'); if (nx) nx.status = 'live'; }
   return blocks;
 }
+function microTotal(B = microBlocks()) { return sum(B, b => b.target); }
 function microTarget(j, B = microBlocks()) { let t = 0; B.forEach(b => { const k = Math.max(0, Math.min(j, b.to) - b.from + 1); if (k > 0) t += b.target * (k / b.size); }); return +t.toFixed(2); }
 function blockCard(b) {
   const pct = Math.min(100, b.pts / (b.size * 3) * 100), tg = b.target / (b.size * 3) * 100;
@@ -707,19 +710,19 @@ function rMicro() {
   const cum = zarCumulative(), n = cum.length, pts = cum[n - 1] || 0;
   const target = j => microTarget(j, B);
   const blockEnds = Array.from({ length: 38 }, (_, i) => B.some(x => x.to === i + 1));
-  const sup = pts - target(n);
+  const sup = pts - target(n), TOT = microTotal(B);
   $('#view-micro').innerHTML = `
-  <div class="section-title"><h2>Microobjetivos de Ibai</h2><small>Preludio de 2 partidos + 9 bloques de 4</small></div>
-  <div class="note">«Hay que separar los dos primeros partidos y, luego, hacer nueve bloques de cuatro jornadas», explicó Ibai Gómez. El <b>preludio</b> son las jornadas 1 y 2 (Tarragona y Antequera), con el objetivo de sumar <b>6 de 6</b>. Después, <b>7 puntos de cada 12</b> en cada uno de los nueve bloques. Si se cumple todo, son <b>69 puntos</b>: según Ibai, «prácticamente, campeones de liga».</div>
+  <div class="section-title"><h2>Microobjetivos de Ibai</h2><small>9 bloques de 4 + bloque final de 2</small></div>
+  <div class="note">El plan de Ibai Gómez: <b>bloques de cuatro jornadas desde la J1</b>, con el objetivo de sumar <b>7 puntos de cada 12</b> en cada uno de los nueve bloques (J1-J36), y un <b>bloque final</b> con las dos últimas jornadas (J37-J38), con <b>${(B[B.length - 1] || {}).target} de 6</b>. Si se cumple todo, son <b>${TOT} puntos</b>: según Ibai, «prácticamente, campeones de liga».</div>
   <div class="grid g4" style="margin-top:14px">
     <div class="card kpi"><span class="k">Superávit acumulado</span><span class="v ${sup >= 0 ? 'up' : 'down'}">${sup >= 0 ? '+' : ''}${fmt(sup, 1)}</span><span class="d">${pts} pts frente a ${fmt(target(n), 1)} del plan (J${n})</span></div>
     <div class="card kpi"><span class="k">Bloques cumplidos</span><span class="v">${ok}/${done.length}</span><span class="d">de los cerrados</span></div>
-    <div class="card kpi"><span class="k">Proyección al ritmo actual</span><span class="v">${fmt(pts / Math.max(1, n) * 38, 1)}</span><span class="d">vs 69 del plan</span></div>
-    <div class="card kpi"><span class="k">Para llegar a 69</span><span class="v">${Math.max(0, 69 - pts)}</span><span class="d">pts en ${38 - n} partidos: ${fmt(Math.max(0, 69 - pts) / Math.max(1, 38 - n), 2)} por partido</span></div>
+    <div class="card kpi"><span class="k">Proyección al ritmo actual</span><span class="v">${fmt(pts / Math.max(1, n) * 38, 1)}</span><span class="d">vs ${TOT} del plan</span></div>
+    <div class="card kpi"><span class="k">Para llegar a ${TOT}</span><span class="v">${Math.max(0, TOT - pts)}</span><span class="d">pts en ${38 - n} partidos: ${fmt(Math.max(0, TOT - pts) / Math.max(1, 38 - n), 2)} por partido</span></div>
   </div>
   <div class="card" style="margin-top:14px"><h3>Plan vs realidad</h3><div class="sub">Puntos acumulados del Zaragoza frente al objetivo de cada bloque</div>
     <div class="chart-wrap"><canvas id="cMicro"></canvas></div>
-    <div class="legend"><span><i style="background:${c.zar}"></i>Zaragoza</span><span><i style="background:#5b8cff"></i>Plan (6 + 7 cada 4)</span><span><i style="background:#22c58b"></i>Superávit por bloque</span></div></div>
+    <div class="legend"><span><i style="background:${c.zar}"></i>Zaragoza</span><span><i style="background:#5b8cff"></i>Plan (7 cada 4)</span><span><i style="background:#22c58b"></i>Superávit por bloque</span></div></div>
   <div class="blocks" style="margin-top:14px">${B.map(b => `<div class="block ${b.status === 'ok' ? 'ok' : b.status === 'ko' ? 'ko' : b.status === 'live' ? 'live' : ''}">${blockCard(b)}</div>`).join('')}</div>
   ${footer()}`;
   chart('cMicro', { data: { labels: jLabels(38), datasets: [
