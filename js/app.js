@@ -549,8 +549,8 @@ function rEstadisticas() {
   ${footer()}`;
 
   const pos = positionsByRound();
-  chart('cPos', { type: 'line', data: { labels: jLabels(pos.length), datasets: [{ data: pos, borderColor: c.zar, backgroundColor: c.zarFill, fill: 'start', borderWidth: 3, pointRadius: 4, pointBackgroundColor: pos.map(p => p === 1 ? '#22c58b' : p <= 5 ? '#5b8cff' : '#ff5a6a'), tension: .3 }] },
-    options: { scales: { y: gridY({ reverse: true, min: 1, max: 20, ticks: { stepSize: 1, callback: v => [1, 5, 10, 15, 20].includes(v) ? v + 'º' : '' } }), x: noGrid() } } });
+  chart('cPos', { type: 'line', data: { labels: jLabels(pos.length), datasets: [{ data: pos, borderColor: c.zar, backgroundColor: c.zarFill, fill: 'start', borderWidth: 3, pointRadius: 4, pointBackgroundColor: pos.map(p => p === 1 ? '#22c58b' : p <= 5 ? '#5b8cff' : '#ff5a6a'), tension: .3, clip: false }] },
+    options: { layout: { padding: { top: 8, right: 8 } }, scales: { y: gridY({ reverse: true, min: 1, max: 20, ticks: { stepSize: 1, autoSkip: false, callback: v => [1, 5, 10, 15, 20].includes(v) ? v + 'º' : '' } }), x: noGrid() } } });
 
   const top = st.slice(0, 5).map(s => s.code); if (!top.includes(S.season.team)) top.push(S.season.team);
   const pal = ['#ff5a5f', '#f5b83d', '#3ccf7a', '#a77bff', '#36b9e6'];
