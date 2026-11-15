@@ -9,10 +9,10 @@ REFRESH-INTERVAL;VALUE=DURATION:PT6H
 X-PUBLISHED-TTL:PT6H
 BEGIN:VEVENT
 UID:nyv-liga-2627-j12@nobleza-y-valor
-DTSTAMP:20261110T101343Z
+DTSTAMP:20261115T020158Z
 DTSTART:20261114T200000Z
 DTEND:20261114T220000Z
-SUMMARY:⚽ Real Jaén - Real Zaragoza
+SUMMARY:⚽ Real Jaén - Real Zaragoza (0-4)
 LOCATION:Estadio Municipal La Victoria\, Jaén
 DESCRIPTION:1ª Federación · Grupo 2 · Jornada 12\nhttps://fjaenj.githu
  b.io/real-zaragoza-stats/
