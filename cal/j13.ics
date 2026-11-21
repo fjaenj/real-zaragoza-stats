@@ -9,10 +9,10 @@ REFRESH-INTERVAL;VALUE=DURATION:PT6H
 X-PUBLISHED-TTL:PT6H
 BEGIN:VEVENT
 UID:nyv-liga-2627-j13@nobleza-y-valor
-DTSTAMP:20261110T101343Z
+DTSTAMP:20261121T214619Z
 DTSTART:20261121T153000Z
 DTEND:20261121T173000Z
-SUMMARY:⚽ Real Zaragoza - Rayo Majadahonda
+SUMMARY:⚽ Real Zaragoza - Rayo Majadahonda (2-0)
 LOCATION:Ibercaja Estadio\, Zaragoza
 DESCRIPTION:1ª Federación · Grupo 2 · Jornada 13\nhttps://fjaenj.githu
  b.io/real-zaragoza-stats/
