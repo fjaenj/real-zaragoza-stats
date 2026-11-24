@@ -9,7 +9,7 @@ REFRESH-INTERVAL;VALUE=DURATION:PT6H
 X-PUBLISHED-TTL:PT6H
 BEGIN:VEVENT
 UID:nyv-liga-2627-j01@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20260830T193000Z
 DTEND:20260830T213000Z
 SUMMARY:⚽ Gimnàstic de Tarragona - Real Zaragoza (2-0)
@@ -20,7 +20,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j02@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20260905T190000Z
 DTEND:20260905T210000Z
 SUMMARY:⚽ Real Zaragoza - Antequera CF (1-0)
@@ -31,7 +31,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j03@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20260913T140000Z
 DTEND:20260913T160000Z
 SUMMARY:⚽ Juventud Torremolinos - Real Zaragoza (3-4)
@@ -42,7 +42,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j04@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20260920T183000Z
 DTEND:20260920T203000Z
 SUMMARY:⚽ Real Zaragoza - FC Cartagena (1-0)
@@ -53,7 +53,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j05@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20260925T191500Z
 DTEND:20260925T211500Z
 SUMMARY:⚽ UD Ibiza - Real Zaragoza (0-2)
@@ -64,7 +64,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j06@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20261004T190000Z
 DTEND:20261004T210000Z
 SUMMARY:⚽ Real Zaragoza - CD Teruel (4-1)
@@ -75,7 +75,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j07@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20261011T190000Z
 DTEND:20261011T210000Z
 SUMMARY:⚽ Atlético Madrileño - Real Zaragoza (4-4)
@@ -86,7 +86,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j08@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20261018T161500Z
 DTEND:20261018T181500Z
 SUMMARY:⚽ Real Murcia - Real Zaragoza (0-0)
@@ -97,7 +97,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j09@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20261023T191500Z
 DTEND:20261023T211500Z
 SUMMARY:⚽ CE Europa - Real Zaragoza (0-1)
@@ -108,7 +108,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j10@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20261031T200000Z
 DTEND:20261031T220000Z
 SUMMARY:⚽ Real Zaragoza - Villarreal B (2-2)
@@ -119,7 +119,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j11@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20261107T200000Z
 DTEND:20261107T220000Z
 SUMMARY:⚽ Real Zaragoza - SD Huesca (2-0)
@@ -130,7 +130,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j12@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20261114T200000Z
 DTEND:20261114T220000Z
 SUMMARY:⚽ Real Jaén - Real Zaragoza (0-4)
@@ -141,7 +141,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j13@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20261121T153000Z
 DTEND:20261121T173000Z
 SUMMARY:⚽ Real Zaragoza - Rayo Majadahonda (2-0)
@@ -152,7 +152,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j14@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20261128T174500Z
 DTEND:20261128T194500Z
 SUMMARY:⚽ AD Alcorcón - Real Zaragoza
@@ -163,7 +163,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j15@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20261207T193000Z
 DTEND:20261207T213000Z
 SUMMARY:⚽ Real Zaragoza - Águilas FC
@@ -174,7 +174,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j16@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20261213
 DTEND;VALUE=DATE:20261214
 SUMMARY:⚽ Real Madrid Castilla - Real Zaragoza (horario por confirmar)
@@ -186,7 +186,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j17@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20261220
 DTEND;VALUE=DATE:20261221
 SUMMARY:⚽ Real Zaragoza - Hércules CF (horario por confirmar)
@@ -198,7 +198,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j18@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270103
 DTEND;VALUE=DATE:20270104
 SUMMARY:⚽ Algeciras CF - Real Zaragoza (horario por confirmar)
@@ -210,7 +210,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j19@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270110
 DTEND;VALUE=DATE:20270111
 SUMMARY:⚽ Real Zaragoza - UE Sant Andreu (horario por confirmar)
@@ -222,7 +222,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j20@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270117
 DTEND;VALUE=DATE:20270118
 SUMMARY:⚽ Real Zaragoza - Real Murcia (horario por confirmar)
@@ -234,7 +234,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j21@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270124
 DTEND;VALUE=DATE:20270125
 SUMMARY:⚽ Villarreal B - Real Zaragoza (horario por confirmar)
@@ -246,7 +246,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j22@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270131
 DTEND;VALUE=DATE:20270201
 SUMMARY:⚽ Real Zaragoza - Juventud Torremolinos (horario por confirmar)
@@ -258,7 +258,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j23@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270207
 DTEND;VALUE=DATE:20270208
 SUMMARY:⚽ FC Cartagena - Real Zaragoza (horario por confirmar)
@@ -270,7 +270,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j24@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270214
 DTEND;VALUE=DATE:20270215
 SUMMARY:⚽ Real Zaragoza - UD Ibiza (horario por confirmar)
@@ -282,7 +282,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j25@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270221
 DTEND;VALUE=DATE:20270222
 SUMMARY:⚽ Real Zaragoza - CE Europa (horario por confirmar)
@@ -294,7 +294,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j26@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270228
 DTEND;VALUE=DATE:20270301
 SUMMARY:⚽ CD Teruel - Real Zaragoza (horario por confirmar)
@@ -306,7 +306,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j27@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270307
 DTEND;VALUE=DATE:20270308
 SUMMARY:⚽ Real Zaragoza - Real Madrid Castilla (horario por confirmar)
@@ -318,7 +318,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j28@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270314
 DTEND;VALUE=DATE:20270315
 SUMMARY:⚽ Antequera CF - Real Zaragoza (horario por confirmar)
@@ -330,7 +330,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j29@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270321
 DTEND;VALUE=DATE:20270322
 SUMMARY:⚽ Real Zaragoza - AD Alcorcón (horario por confirmar)
@@ -342,7 +342,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j30@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270328
 DTEND;VALUE=DATE:20270329
 SUMMARY:⚽ SD Huesca - Real Zaragoza (horario por confirmar)
@@ -354,7 +354,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j31@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270404
 DTEND;VALUE=DATE:20270405
 SUMMARY:⚽ Real Zaragoza - Gimnàstic de Tarragona (horario por confirmar
@@ -367,7 +367,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j32@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270411
 DTEND;VALUE=DATE:20270412
 SUMMARY:⚽ UE Sant Andreu - Real Zaragoza (horario por confirmar)
@@ -379,7 +379,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j33@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270418
 DTEND;VALUE=DATE:20270419
 SUMMARY:⚽ Real Zaragoza - Real Jaén (horario por confirmar)
@@ -391,7 +391,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j34@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270425
 DTEND;VALUE=DATE:20270426
 SUMMARY:⚽ Águilas FC - Real Zaragoza (horario por confirmar)
@@ -403,7 +403,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j35@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270502
 DTEND;VALUE=DATE:20270503
 SUMMARY:⚽ Real Zaragoza - Atlético Madrileño (horario por confirmar)
@@ -415,7 +415,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j36@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270509
 DTEND;VALUE=DATE:20270510
 SUMMARY:⚽ Rayo Majadahonda - Real Zaragoza (horario por confirmar)
@@ -427,7 +427,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j37@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270516
 DTEND;VALUE=DATE:20270517
 SUMMARY:⚽ Real Zaragoza - Algeciras CF (horario por confirmar)
@@ -439,7 +439,7 @@ URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 BEGIN:VEVENT
 UID:nyv-liga-2627-j38@nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART;VALUE=DATE:20270523
 DTEND;VALUE=DATE:20270524
 SUMMARY:⚽ Hércules CF - Real Zaragoza (horario por confirmar)
@@ -452,13 +452,27 @@ END:VEVENT
 BEGIN:VEVENT
 UID:nyv-temporada-2026-2027-copa-del-rey-3-tudelano-vs-real-zaragoza-5218@
  nobleza-y-valor
-DTSTAMP:20261121T214619Z
+DTSTAMP:20261124T025848Z
 DTSTART:20261027T200000Z
 DTEND:20261027T220000Z
 SUMMARY:🏆 CD Tudelano - Real Zaragoza (Copa del Rey)
 LOCATION:Ciudad de Tudela
 DESCRIPTION:Copa del Rey · Ronda 3\nhttps://fjaenj.github.io/real-zaragoz
  a-stats/
+URL:https://fjaenj.github.io/real-zaragoza-stats/
+END:VEVENT
+BEGIN:VEVENT
+UID:nyv-temporada-2026-2027-copa-del-rey-4-real-zaragoza-vs-burgos-cf-5246
+ @nobleza-y-valor
+DTSTAMP:20261124T025848Z
+DTSTART;VALUE=DATE:20261202
+DTEND;VALUE=DATE:20261203
+SUMMARY:🏆 Real Zaragoza - Burgos CF (Copa del Rey) (horario por confirm
+ ar)
+LOCATION:Ibercaja Estadio
+DESCRIPTION:Copa del Rey · Ronda 4\nHorario por confirmar: la RFEF lo fij
+ a con 2-3 semanas de antelación. Si estás suscrito\, se actualiza solo.
+ \nhttps://fjaenj.github.io/real-zaragoza-stats/
 URL:https://fjaenj.github.io/real-zaragoza-stats/
 END:VEVENT
 END:VCALENDAR
